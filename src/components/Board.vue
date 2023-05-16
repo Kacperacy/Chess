@@ -3,14 +3,13 @@ import Square from "./Square.vue";
 </script>
 
 <template>
-  <div class="w-[800px] h-[800px] flex flex-wrap">
+  <div class="w-full h-full flex flex-wrap">
     <Square
       v-for="index in 64"
       :key="index"
-      v-bind:color="
-        (index + Math.floor((index - 1) / 8)) % 2 == 0 ? 'dark' : 'light'
-      "
       v-bind:index="index"
+      v-bind:x="((index - 1) % 8) + 1"
+      v-bind:y="Math.floor((index - 1) / 8) + 1"
     ></Square>
   </div>
 </template>

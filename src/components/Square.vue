@@ -1,21 +1,25 @@
-<template>
-  <div :class="bg" class="w-[12.5%] h-[12.5%]" @click="changeBg">
-    <div
-      :class="{ 'bg-opacity-50 bg-[color:yellow]': active }"
-      class="w-full h-full text-center text-5xl"
-    ></div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref } from "vue";
+import { useBoardListStore } from "../stores/board";
 
-const props = defineProps<{ color: string; index: number }>();
+const store = useBoardListStore();
 
-const active = ref(false);
-const bg = ref("bg-square-" + props.color);
+const props = defineProps<{
+  index: number;
+  x: number;
+  y: number;
+}>();
 
-function changeBg() {
-  active.value = !active.value;
-}
+const color: string = (props.x + props.y) % 2 == 0 ? "dark" : "light";
+const bg = ref("bg-square-" + color);
+
+const { changeHighlight } = store;
 </script>
+
+<template>
+  <div
+    :class="bg"
+    class="w-[12.5%] h-[12.5%]"
+    @click="changeHighlight(x, y)"
+  ></div>
+</template>
