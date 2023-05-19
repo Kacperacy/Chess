@@ -4,13 +4,19 @@ Application like [chess.com](https://www.chess.com/) or [lichess](https://liches
 
 ## Roadmap
 
-1. Playable chess game on front-end side
-2. Connection with backend to enable every user make his own account
-3. Real time connection with server using web sockets to enable users to play against each other
-4. Game time control
-5. Possibility to play against chess engine
-6. Ranking system
-7. User game history
+1. [ ] Playable chess game on front-end side
+   1. [ ] Board
+   2. [ ] Pieces
+   3. [ ] Pieces movement
+   4. [ ] Move validation
+   5. [ ] Game result
+   6. [ ] Position loading from FEN
+2. [ ] Connection with backend to enable every user make his own account
+3. [ ] Real time connection with server using web sockets to enable users to play against each other
+4. [ ] Game time control
+5. [ ] Possibility to play against chess engine
+6. [ ] Ranking system
+7. [ ] User game history
 
 For now I'm on `1.` point of roadmap and I want to make full playable chess game only on front-end side.
 
