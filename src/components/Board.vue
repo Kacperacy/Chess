@@ -1,15 +1,17 @@
-<script setup lang="ts">
-import Square from "./Square.vue";
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="w-full h-full flex flex-wrap">
-    <Square
+    <div
       v-for="index in 64"
       :key="index"
-      v-bind:index="index"
-      v-bind:x="((index - 1) % 8) + 1"
-      v-bind:y="Math.floor((index - 1) / 8) + 1"
-    ></Square>
+      class="w-[12.5%] h-[12.5%]"
+      :class="{
+        'bg-square-light':
+          (((index - 1) % 8) + Math.floor((index - 1) / 8)) % 2 == 0,
+        'bg-square-dark':
+          (((index - 1) % 8) + Math.floor((index - 1) / 8)) % 2 != 0,
+      }"
+    ></div>
   </div>
 </template>
