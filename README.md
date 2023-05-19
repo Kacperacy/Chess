@@ -18,8 +18,6 @@ Application like [chess.com](https://www.chess.com/) or [lichess](https://liches
 6. [ ] Ranking system
 7. [ ] User game history
 
-For now I'm on `1.` point of roadmap and I want to make full playable chess game only on front-end side.
-
 ## Technologies
 
 - Vue
