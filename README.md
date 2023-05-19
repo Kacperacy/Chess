@@ -1,6 +1,6 @@
 # Chess app
 
-Application like [chess.com](https://www.chess.com/) or [lichess](https://lichess.org/).
+Application like [chess.com](https://www.chess.com/) or [lichess](https://lichess.org/). If you have some issues with project you can contact me or make issue on repository, every feedback is appreciated ❤️.
 
 ## Roadmap
 
@@ -14,7 +14,7 @@ Application like [chess.com](https://www.chess.com/) or [lichess](https://liches
 
 For now I'm on `1.` point of roadmap and I want to make full playable chess game only on front-end side.
 
-## Technologies:
+## Technologies
 
 - Vue
 - Typescript
