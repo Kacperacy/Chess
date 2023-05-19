@@ -1,18 +1,30 @@
-# Vue 3 + TypeScript + Vite
+# Chess app
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Application like [chess.com](https://www.chess.com/) or [lichess](https://lichess.org/).
 
-## Recommended IDE Setup
+## Roadmap
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+1. Playable chess game on front-end side
+2. Connection with backend to enable every user make his own account
+3. Real time connection with server using web sockets to enable users to play against each other
+4. Game time control
+5. Possibility to play against chess engine
+6. Ranking system
+7. User game history
 
-## Type Support For `.vue` Imports in TS
+For now I'm on `1.` point of roadmap and I want to make full playable chess game only on front-end side.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+## Technologies:
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+- Vue
+- Typescript
+- TailwindCSS
+- .NET 7 (planned to move to version 8 on release)
+- PostgreSQL
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+## How to run
+
+To run application you must clone repo and use this commands:
+
+1. `npm install`
+2. `npm run dev`
