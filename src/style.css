@@ -1,3 +1,65 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    .dark-pawn {
+        background-image: url(assets/figures/dp.svg);
+        background-size: cover;
+    }
+
+    .dark-bishop {
+        background-image: url(assets/figures/db.svg);
+        background-size: cover;
+    }
+
+    .dark-knight {
+        background-image: url(assets/figures/dn.svg);
+        background-size: cover;
+    }
+
+    .dark-rook {
+        background-image: url(assets/figures/dr.svg);
+        background-size: cover;
+    }
+
+    .dark-king {
+        background-image: url(assets/figures/dk.svg);
+        background-size: cover;
+    }
+
+    .dark-queen {
+        background-image: url(assets/figures/dq.svg);
+        background-size: cover;
+    }
+
+    .light-pawn {
+        background-image: url(assets/figures/lp.svg);
+        background-size: cover;
+    }
+
+    .light-bishop {
+        background-image: url(assets/figures/lb.svg);
+        background-size: cover;
+    }
+
+    .light-knight {
+        background-image: url(assets/figures/ln.svg);
+        background-size: cover;
+    }
+
+    .light-rook {
+        background-image: url(assets/figures/lr.svg);
+        background-size: cover;
+    }
+
+    .light-king {
+        background-image: url(assets/figures/lk.svg);
+        background-size: cover;
+    }
+
+    .light-queen {
+        background-image: url(assets/figures/lq.svg);
+        background-size: cover;
+    }
+}

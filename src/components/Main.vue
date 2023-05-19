@@ -7,7 +7,9 @@ const store = useBoardListStore();
 
 const { highlightList, piecesList } = storeToRefs(store);
 
-const { changeHighlight, changeSelect } = store;
+const { changeHighlight, changeSelect, loadFEN } = store;
+
+store.loadFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
 function getPositionClicked(e: MouseEvent) {
   const board: HTMLElement | null = document.getElementById("board");
@@ -67,6 +69,41 @@ function select(e: MouseEvent) {
           (store.selectedSquare.y - 1) * 100 +
           '%]'
         "
+      ></div>
+      <div class="dark-pawn absolute top-0 left-0 w-[12.5%] h-[12.5%]"></div>
+      <div
+        class="dark-bishop absolute top-0 left-0 w-[12.5%] h-[12.5%] translate-x-[100%]"
+      ></div>
+      <div
+        class="dark-knight absolute top-0 left-0 w-[12.5%] h-[12.5%] translate-x-[200%]"
+      ></div>
+      <div
+        class="dark-rook absolute top-0 left-0 w-[12.5%] h-[12.5%] translate-x-[300%]"
+      ></div>
+      <div
+        class="dark-king absolute top-0 left-0 w-[12.5%] h-[12.5%] translate-x-[400%]"
+      ></div>
+      <div
+        class="dark-queen absolute top-0 left-0 w-[12.5%] h-[12.5%] translate-x-[500%]"
+      ></div>
+
+      <div
+        class="light-pawn absolute top-0 left-0 w-[12.5%] h-[12.5%] translate-y-[700%]"
+      ></div>
+      <div
+        class="light-bishop absolute top-0 left-0 w-[12.5%] h-[12.5%] translate-x-[100%] translate-y-[700%]"
+      ></div>
+      <div
+        class="light-knight absolute top-0 left-0 w-[12.5%] h-[12.5%] translate-x-[200%] translate-y-[700%]"
+      ></div>
+      <div
+        class="light-rook absolute top-0 left-0 w-[12.5%] h-[12.5%] translate-x-[300%] translate-y-[700%]"
+      ></div>
+      <div
+        class="light-king absolute top-0 left-0 w-[12.5%] h-[12.5%] translate-x-[400%] translate-y-[700%]"
+      ></div>
+      <div
+        class="light-queen absolute top-0 left-0 w-[12.5%] h-[12.5%] translate-x-[500%] translate-y-[700%]"
       ></div>
     </div>
   </div>
