@@ -4,8 +4,8 @@ Application like [chess.com](https://www.chess.com/) or [lichess](https://liches
 
 ## Roadmap
 
-1. [ ] Playable chess game on front-end side
-   1. [ ] Board
+1. [x] Playable chess game on front-end side
+   1. [x] Board
    2. [ ] Pieces
    3. [ ] Pieces movement
    4. [ ] Move validation
