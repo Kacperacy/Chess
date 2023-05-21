@@ -6,11 +6,11 @@ Application like [chess.com](https://www.chess.com/) or [lichess](https://liches
 
 1. [x] Playable chess game on front-end side
    1. [x] Board
-   2. [ ] Pieces
+   2. [x] Pieces
    3. [ ] Pieces movement
    4. [ ] Move validation
    5. [ ] Game result
-   6. [ ] Position loading from FEN
+   6. [x] Position loading from FEN
 2. [ ] Connection with backend to enable every user make his own account
 3. [ ] Real time connection with server using web sockets to enable users to play against each other
 4. [ ] Game time control

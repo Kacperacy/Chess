@@ -1,7 +1,9 @@
 import { defineStore } from "pinia";
 import { Coordinates } from "../models/coordinates.model";
 import { Piece } from "../models/piece.model";
+import { PieceType } from "../models/pieceType.model";
 import { GameState } from "../models/gameState.model";
+import { ColorType } from "../models/colorType.model";
 
 export type RootState = {
   piecesList: Piece[];
@@ -64,8 +66,43 @@ export const useBoardListStore = defineStore("board", {
       this.gameState.enpassant = config.shift() as string;
       this.gameState.halfmovesCount = Number(config.shift());
       this.gameState.movesCount = Number(config.shift());
-      console.log(rows);
-      console.log(this.gameState);
+
+      let pos: number = 0;
+
+      rows.forEach((row) => {
+        row.split("").forEach((letter) => {
+          let num = Number(letter);
+          if (Number.isNaN(num)) {
+            let x = (pos % 8) + 1;
+            let y = Math.floor(pos / 8) + 1;
+
+            let piece = {
+              color: (letter == letter.toUpperCase()
+                ? ColorType.Light
+                : ColorType.Dark) as ColorType,
+              coordinates: { x, y } as Coordinates,
+              type: null as unknown as PieceType,
+            };
+
+            if (letter.toLocaleLowerCase() == "p") piece.type = PieceType.Pawn;
+            else if (letter.toLocaleLowerCase() == "b")
+              piece.type = PieceType.Bishop;
+            else if (letter.toLocaleLowerCase() == "n")
+              piece.type = PieceType.Knight;
+            else if (letter.toLocaleLowerCase() == "r")
+              piece.type = PieceType.Rook;
+            else if (letter.toLocaleLowerCase() == "q")
+              piece.type = PieceType.Queen;
+            else if (letter.toLocaleLowerCase() == "k")
+              piece.type = PieceType.King;
+
+            this.piecesList.push(piece);
+            pos++;
+          } else {
+            pos += num;
+          }
+        });
+      });
     },
   },
 });
