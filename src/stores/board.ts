@@ -43,8 +43,11 @@ export const useBoardListStore = defineStore("board", {
     changeSelect(x: number, y: number) {
       this.clearHighlight();
       if (
-        this.selectedSquare == null ||
-        !(this.selectedSquare.x == x && this.selectedSquare.y == y)
+        (this.selectedSquare == null ||
+          !(this.selectedSquare.x == x && this.selectedSquare.y == y)) &&
+        this.piecesList.find(
+          (obj) => obj.coordinates.x == x && obj.coordinates.y == y
+        )
       )
         this.selectedSquare = { x, y };
       else this.selectedSquare = null;
