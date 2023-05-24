@@ -4,6 +4,7 @@ import { Piece } from "../models/piece.model";
 import { PieceType } from "../models/pieceType.model";
 import { GameState } from "../models/gameState.model";
 import { ColorType } from "../models/colorType.model";
+import { Chess } from "chess.ts";
 
 export type RootState = {
   piecesList: Piece[];
@@ -11,6 +12,7 @@ export type RootState = {
   selectedPiece: Piece | null;
   gameState: GameState;
   possibleMoves: Coordinates[];
+  chess: Chess;
 };
 
 export const useBoardListStore = defineStore("board", {
@@ -27,6 +29,7 @@ export const useBoardListStore = defineStore("board", {
         movesCount: 1,
       } as GameState,
       possibleMoves: [],
+      chess: new Chess(),
     } as RootState),
   actions: {
     changeHighlight(x: number, y: number) {
@@ -45,6 +48,9 @@ export const useBoardListStore = defineStore("board", {
     },
     changeSelect(x: number, y: number) {
       this.clearHighlight();
+      console.log("x");
+
+      if (this.tryMove(x, y)) return;
 
       const piece = this.piecesList.find(
         (obj) => obj.coordinates.x == x && obj.coordinates.y == y
@@ -101,17 +107,12 @@ export const useBoardListStore = defineStore("board", {
               type: null as unknown as PieceType,
             };
 
-            if (letter.toLocaleLowerCase() == "p") piece.type = PieceType.Pawn;
-            else if (letter.toLocaleLowerCase() == "b")
-              piece.type = PieceType.Bishop;
-            else if (letter.toLocaleLowerCase() == "n")
-              piece.type = PieceType.Knight;
-            else if (letter.toLocaleLowerCase() == "r")
-              piece.type = PieceType.Rook;
-            else if (letter.toLocaleLowerCase() == "q")
-              piece.type = PieceType.Queen;
-            else if (letter.toLocaleLowerCase() == "k")
-              piece.type = PieceType.King;
+            if (letter.toLowerCase() == "p") piece.type = PieceType.Pawn;
+            else if (letter.toLowerCase() == "b") piece.type = PieceType.Bishop;
+            else if (letter.toLowerCase() == "n") piece.type = PieceType.Knight;
+            else if (letter.toLowerCase() == "r") piece.type = PieceType.Rook;
+            else if (letter.toLowerCase() == "q") piece.type = PieceType.Queen;
+            else if (letter.toLowerCase() == "k") piece.type = PieceType.King;
 
             this.piecesList.push(piece);
             pos++;
@@ -232,6 +233,47 @@ export const useBoardListStore = defineStore("board", {
       this.possibleMoves = this.possibleMoves.filter(
         (obj) => obj.x >= 1 && obj.x <= 8 && obj.y >= 1 && obj.y <= 8
       );
+    },
+    translateCoordinates(x: number, y: number) {
+      let xValue = "";
+
+      if (x == 1) xValue = "a";
+      if (x == 2) xValue = "b";
+      if (x == 3) xValue = "c";
+      if (x == 4) xValue = "d";
+      if (x == 5) xValue = "e";
+      if (x == 6) xValue = "f";
+      if (x == 7) xValue = "g";
+      if (x == 8) xValue = "h";
+
+      return xValue + (9 - y);
+    },
+    tryMove(x: number, y: number) {
+      if (this.selectedPiece == null) return false;
+
+      this.chess.clear();
+      this.chess.load(this.getFEN());
+
+      const from = this.translateCoordinates(
+        this.selectedPiece.coordinates.x,
+        this.selectedPiece.coordinates.y
+      );
+      const to = this.translateCoordinates(x, y);
+
+      if (this.chess.move({ from, to })) {
+        this.movePiece(x, y);
+        return true;
+      }
+      return false;
+    },
+    movePiece(x: number, y: number) {
+      if (this.selectedPiece == null) return;
+
+      this.selectedPiece.coordinates.x = x;
+      this.selectedPiece.coordinates.y = y;
+
+      this.selectedPiece = null;
+      this.clearPossibleMoves();
     },
   },
 });
