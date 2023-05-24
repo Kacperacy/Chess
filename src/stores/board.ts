@@ -215,8 +215,7 @@ export const useBoardListStore = defineStore("board", {
           { x: x - 1, y: y - 1 }
         );
         // TODO: castling
-      } else this.selectedPiece.type == PieceType.Queen;
-      {
+      } else if (this.selectedPiece.type == PieceType.Queen) {
         for (let i = 1; i < 8; i++) {
           this.possibleMoves.push(
             { x: x - i, y: y },
