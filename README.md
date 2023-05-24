@@ -11,6 +11,9 @@ Application like [chess.com](https://www.chess.com/) or [lichess](https://liches
    4. [x] Move validation
    5. [ ] Game result
    6. [x] Position loading from FEN
+   7. [ ] Board rotation
+   8. [ ] Pawn promotion
+   9. [ ] Possible moves validation
 2. [ ] Connection with backend to enable every user make his own account
 3. [ ] Real time connection with server using web sockets to enable users to play against each other
 4. [ ] Game time control
