@@ -1,16 +1,22 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useBoardListStore } from "../stores/board";
+import { Chess } from "chess.ts";
 import Board from "./Board.vue";
 import Highlights from "./Highlights.vue";
-import SelectedSquare from "./SelectedSquare.vue";
+import SelectedSquare from "./SelectedPiece.vue";
 import Pieces from "./Pieces.vue";
+import PossibleMoves from "./PossibleMoves.vue";
 
 const store = useBoardListStore();
 const { highlightList, piecesList } = storeToRefs(store);
-const { changeHighlight, changeSelect, loadFEN } = store;
+const { changeHighlight, changeSelect, loadFEN, getFEN } = store;
 
 loadFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+
+const chess = new Chess();
+
+chess.load(getFEN());
 
 function getPositionClicked(e: MouseEvent) {
   const board: HTMLElement | null = document.getElementById("board");
@@ -52,6 +58,7 @@ function select(e: MouseEvent) {
       <Highlights />
       <SelectedSquare />
       <Pieces />
+      <PossibleMoves />
     </div>
   </div>
 </template>

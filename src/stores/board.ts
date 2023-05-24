@@ -8,8 +8,9 @@ import { ColorType } from "../models/colorType.model";
 export type RootState = {
   piecesList: Piece[];
   highlightList: Coordinates[];
-  selectedSquare: Coordinates | null;
+  selectedPiece: Piece | null;
   gameState: GameState;
+  possibleMoves: Coordinates[];
 };
 
 export const useBoardListStore = defineStore("board", {
@@ -17,7 +18,7 @@ export const useBoardListStore = defineStore("board", {
     ({
       piecesList: [],
       highlightList: [],
-      selectedSquare: null as unknown as Coordinates,
+      selectedPiece: null as unknown as Piece,
       gameState: {
         turn: "w",
         castles: "KQkq",
@@ -25,6 +26,7 @@ export const useBoardListStore = defineStore("board", {
         halfmovesCount: 0,
         movesCount: 1,
       } as GameState,
+      possibleMoves: [],
     } as RootState),
   actions: {
     changeHighlight(x: number, y: number) {
@@ -38,25 +40,37 @@ export const useBoardListStore = defineStore("board", {
       } else {
         this.highlightList.push({ x, y });
       }
-      this.selectedSquare = null;
+      this.selectedPiece = null;
+      this.clearPossibleMoves();
     },
     changeSelect(x: number, y: number) {
       this.clearHighlight();
+
+      const piece = this.piecesList.find(
+        (obj) => obj.coordinates.x == x && obj.coordinates.y == y
+      );
+
       if (
-        (this.selectedSquare == null ||
-          !(this.selectedSquare.x == x && this.selectedSquare.y == y)) &&
-        this.piecesList.find(
-          (obj) => obj.coordinates.x == x && obj.coordinates.y == y
+        piece != null &&
+        !(
+          this.selectedPiece != null &&
+          this.selectedPiece.coordinates.x == x &&
+          this.selectedPiece.coordinates.y == y
         )
       )
-        this.selectedSquare = { x, y };
-      else this.selectedSquare = null;
+        this.selectedPiece = piece;
+      else this.selectedPiece = null;
+
+      this.updatePossibleMoves();
     },
     clearHighlight() {
       this.highlightList = [];
     },
     clearPieces() {
       this.piecesList = [];
+    },
+    clearPossibleMoves() {
+      this.possibleMoves = [];
     },
     loadFEN(fen: string) {
       this.clearPieces();
@@ -106,6 +120,119 @@ export const useBoardListStore = defineStore("board", {
           }
         });
       });
+    },
+    getFEN() {
+      let fen = "";
+      for (let y = 1; y < 9; y++) {
+        let counter = 0;
+        for (let x = 1; x < 9; x++) {
+          const piece = this.piecesList.find(
+            (obj) => obj.coordinates.x == x && obj.coordinates.y == y
+          );
+
+          if (piece == null) {
+            counter++;
+          } else {
+            if (counter > 0) fen += counter;
+            counter = 0;
+
+            if (piece.color == ColorType.Light) fen += piece.type.toUpperCase();
+            else fen += piece.type;
+          }
+        }
+        if (counter > 0) fen += counter;
+
+        if (y < 8) fen += "/";
+      }
+
+      fen += " " + this.gameState.turn;
+      fen += " " + this.gameState.castles;
+      fen += " " + this.gameState.enpassant;
+      fen += " " + this.gameState.halfmovesCount;
+      fen += " " + this.gameState.movesCount;
+
+      return fen;
+    },
+    updatePossibleMoves() {
+      this.clearPossibleMoves();
+
+      if (this.selectedPiece == null) return;
+
+      const x = this.selectedPiece.coordinates.x;
+      const y = this.selectedPiece.coordinates.y;
+
+      if (this.selectedPiece.type == PieceType.Pawn) {
+        if (this.selectedPiece.color == ColorType.Light)
+          this.possibleMoves.push(
+            { x: x - 1, y: y - 1 },
+            { x: x, y: y - 1 },
+            { x: x + 1, y: y - 1 }
+          );
+        else
+          this.possibleMoves.push(
+            { x: x - 1, y: y + 1 },
+            { x: x, y: y + 1 },
+            { x: x + 1, y: y + 1 }
+          );
+      } else if (this.selectedPiece.type == PieceType.Bishop) {
+        for (let i = 1; i < 8; i++) {
+          this.possibleMoves.push(
+            { x: x - i, y: y - i },
+            { x: x + i, y: y - i },
+            { x: x + i, y: y + i },
+            { x: x - i, y: y + i }
+          );
+        }
+      } else if (this.selectedPiece.type == PieceType.Knight) {
+        this.possibleMoves.push(
+          { x: x - 2, y: y - 1 },
+          { x: x + 2, y: y - 1 },
+          { x: x + 2, y: y + 1 },
+          { x: x - 2, y: y + 1 },
+          { x: x - 1, y: y - 2 },
+          { x: x + 1, y: y - 2 },
+          { x: x + 1, y: y + 2 },
+          { x: x - 1, y: y + 2 }
+        );
+      } else if (this.selectedPiece.type == PieceType.Rook) {
+        for (let i = 1; i < 8; i++) {
+          this.possibleMoves.push(
+            { x: x - i, y: y },
+            { x: x + i, y: y },
+            { x: x, y: y + i },
+            { x: x, y: y - i }
+          );
+        }
+      } else if (this.selectedPiece.type == PieceType.King) {
+        this.possibleMoves.push(
+          { x: x + 1, y: y },
+          { x: x - 1, y: y },
+          { x: x, y: y + 1 },
+          { x: x, y: y - 1 },
+          { x: x + 1, y: y + 1 },
+          { x: x + 1, y: y - 1 },
+          { x: x - 1, y: y + 1 },
+          { x: x - 1, y: y - 1 }
+        );
+        // TODO: castling
+      } else this.selectedPiece.type == PieceType.Queen;
+      {
+        for (let i = 1; i < 8; i++) {
+          this.possibleMoves.push(
+            { x: x - i, y: y },
+            { x: x + i, y: y },
+            { x: x, y: y + i },
+            { x: x, y: y - i },
+            { x: x - i, y: y - i },
+            { x: x + i, y: y - i },
+            { x: x + i, y: y + i },
+            { x: x - i, y: y + i }
+          );
+        }
+      }
+      this.possibleMoves = this.possibleMoves.filter(
+        (obj) => obj.x >= 1 && obj.x <= 8 && obj.y >= 1 && obj.y <= 8
+      );
     },
   },
 });
