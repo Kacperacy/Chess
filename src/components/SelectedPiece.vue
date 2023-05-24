@@ -10,8 +10,6 @@ const { selectedPiece } = storeToRefs(store);
 const chess = new Chess();
 
 const moves = chess.moves();
-
-console.log(moves);
 </script>
 <template>
   <div

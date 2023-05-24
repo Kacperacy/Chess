@@ -7,8 +7,8 @@ Application like [chess.com](https://www.chess.com/) or [lichess](https://liches
 1. [x] Playable chess game on front-end side
    1. [x] Board
    2. [x] Pieces
-   3. [ ] Pieces movement
-   4. [ ] Move validation
+   3. [x] Pieces movement
+   4. [x] Move validation
    5. [ ] Game result
    6. [x] Position loading from FEN
 2. [ ] Connection with backend to enable every user make his own account

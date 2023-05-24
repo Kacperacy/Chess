@@ -1,22 +1,26 @@
 <script setup lang="ts">
 import { Piece } from "../models/piece.model";
-import { ref } from "vue";
+import { computed, getCurrentInstance, ref, watch } from "vue";
 import { PieceType } from "../models/pieceType.model";
 import { ColorType } from "../models/colorType.model";
 
 const props = defineProps<{ piece: Piece }>();
 
-const pieceClass = ref("");
+let classCss = ref("");
 
-if (props.piece.color == ColorType.Light) pieceClass.value = "light-";
-else pieceClass.value = "dark-";
+const pieceClass = computed(() => {
+  classCss.value = "";
+  if (props.piece.color == ColorType.Light) classCss.value = "light-";
+  else classCss.value = "dark-";
 
-if (props.piece.type == PieceType.Pawn) pieceClass.value += "pawn";
-else if (props.piece.type == PieceType.Bishop) pieceClass.value += "bishop";
-else if (props.piece.type == PieceType.Knight) pieceClass.value += "knight";
-else if (props.piece.type == PieceType.Rook) pieceClass.value += "rook";
-else if (props.piece.type == PieceType.Queen) pieceClass.value += "queen";
-else if (props.piece.type == PieceType.King) pieceClass.value += "king";
+  if (props.piece.type == PieceType.Pawn) classCss.value += "pawn";
+  else if (props.piece.type == PieceType.Bishop) classCss.value += "bishop";
+  else if (props.piece.type == PieceType.Knight) classCss.value += "knight";
+  else if (props.piece.type == PieceType.Rook) classCss.value += "rook";
+  else if (props.piece.type == PieceType.Queen) classCss.value += "queen";
+  else if (props.piece.type == PieceType.King) classCss.value += "king";
+  return classCss;
+});
 </script>
 <template>
   <div
@@ -27,7 +31,7 @@ else if (props.piece.type == PieceType.King) pieceClass.value += "king";
       '%] translate-y-[' +
       (piece.coordinates.y - 1) * 100 +
       '%] ' +
-      pieceClass
+      pieceClass.value
     "
   ></div>
 </template>

@@ -48,7 +48,6 @@ export const useBoardListStore = defineStore("board", {
     },
     changeSelect(x: number, y: number) {
       this.clearHighlight();
-      console.log("x");
 
       if (this.tryMove(x, y)) return;
 
@@ -121,6 +120,9 @@ export const useBoardListStore = defineStore("board", {
           }
         });
       });
+
+      this.chess.clear();
+      this.chess.load(this.getFEN());
     },
     getFEN() {
       let fen = "";
@@ -163,18 +165,21 @@ export const useBoardListStore = defineStore("board", {
       const y = this.selectedPiece.coordinates.y;
 
       if (this.selectedPiece.type == PieceType.Pawn) {
-        if (this.selectedPiece.color == ColorType.Light)
+        if (this.selectedPiece.color == ColorType.Light) {
           this.possibleMoves.push(
             { x: x - 1, y: y - 1 },
             { x: x, y: y - 1 },
             { x: x + 1, y: y - 1 }
           );
-        else
+          if (y == 7) this.possibleMoves.push({ x: x, y: y - 2 });
+        } else {
           this.possibleMoves.push(
             { x: x - 1, y: y + 1 },
             { x: x, y: y + 1 },
             { x: x + 1, y: y + 1 }
           );
+          if (y == 2) this.possibleMoves.push({ x: x, y: y + 2 });
+        }
       } else if (this.selectedPiece.type == PieceType.Bishop) {
         for (let i = 1; i < 8; i++) {
           this.possibleMoves.push(
@@ -251,26 +256,24 @@ export const useBoardListStore = defineStore("board", {
     tryMove(x: number, y: number) {
       if (this.selectedPiece == null) return false;
 
-      this.chess.clear();
-      this.chess.load(this.getFEN());
-
       const from = this.translateCoordinates(
         this.selectedPiece.coordinates.x,
         this.selectedPiece.coordinates.y
       );
       const to = this.translateCoordinates(x, y);
 
-      if (this.chess.move({ from, to })) {
-        this.movePiece(x, y);
+      const move = this.chess.move({ from, to });
+
+      if (move) {
+        this.movePiece();
         return true;
       }
       return false;
     },
-    movePiece(x: number, y: number) {
+    movePiece() {
       if (this.selectedPiece == null) return;
 
-      this.selectedPiece.coordinates.x = x;
-      this.selectedPiece.coordinates.y = y;
+      this.loadFEN(this.chess.fen());
 
       this.selectedPiece = null;
       this.clearPossibleMoves();

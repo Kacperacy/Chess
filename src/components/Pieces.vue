@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { useBoardListStore } from "../stores/board";
 import Piece from "./Piece.vue";
+import { ref, watch } from "vue";
 
 const store = useBoardListStore();
+const { piecesList } = storeToRefs(store);
 
-const { piecesList } = store;
+watch(piecesList, (currentValue, oldValue) => {});
 </script>
 
 <template>
