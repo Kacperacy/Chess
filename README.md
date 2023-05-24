@@ -14,9 +14,20 @@ Application like [chess.com](https://www.chess.com/) or [lichess](https://liches
    7. [ ] Board rotation
    8. [ ] Pawn promotion
    9. [ ] Possible moves validation
-2. [ ] Connection with backend to enable every user make his own account
-3. [ ] Real time connection with server using web sockets to enable users to play against each other
-4. [ ] Game time control
+   10. [ ] Game time control
+2. [ ] Front-end background
+   1. [ ] Application background
+   2. [ ] Background image/color
+   3. [ ] Login form
+   4. [ ] Navigation
+   5. [ ] Customizable board
+3. [ ] Connection with backend to enable every user make his own account
+   1. [ ] Database modeling
+   2. [ ] Authorization
+   3. [ ] API controllers
+   4. [ ] Web socket connection
+   5. [ ] ?? Redis ??
+4. [ ] Real time connection with server using web sockets to enable users to play against each other
 5. [ ] Possibility to play against chess engine
 6. [ ] Ranking system
 7. [ ] User game history
