@@ -10,13 +10,9 @@ import PossibleMoves from "./PossibleMoves.vue";
 
 const store = useBoardListStore();
 const { highlightList, piecesList } = storeToRefs(store);
-const { changeHighlight, changeSelect, loadFEN, getFEN } = store;
+const { changeHighlight, changeSelect, loadFEN } = store;
 
 loadFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-
-const chess = new Chess();
-
-chess.load(getFEN());
 
 function getPositionClicked(e: MouseEvent) {
   const board: HTMLElement | null = document.getElementById("board");

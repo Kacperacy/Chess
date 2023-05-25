@@ -79,6 +79,8 @@ export const useBoardListStore = defineStore("board", {
     },
     loadFEN(fen: string) {
       this.clearPieces();
+      this.chess.clear();
+      this.chess.load(fen);
 
       let rows = fen.split("/");
       const config = rows[7].split(" ");
@@ -120,9 +122,6 @@ export const useBoardListStore = defineStore("board", {
           }
         });
       });
-
-      this.chess.clear();
-      this.chess.load(this.getFEN());
     },
     getFEN() {
       let fen = "";
@@ -271,12 +270,18 @@ export const useBoardListStore = defineStore("board", {
       return false;
     },
     movePiece() {
-      if (this.selectedPiece == null) return;
-
+      const moves = this.chess.moves();
+      this.chess.move(moves[Math.floor(Math.random() * moves.length)]);
       this.loadFEN(this.chess.fen());
 
       this.selectedPiece = null;
       this.clearPossibleMoves();
+
+      if (this.chess.gameOver()) {
+      }
+    },
+    getHistory() {
+      return this.chess.history();
     },
   },
 });
