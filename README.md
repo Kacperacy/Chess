@@ -13,8 +13,9 @@ Application like [chess.com](https://www.chess.com/) or [lichess](https://liches
    6. [x] Position loading from FEN
    7. [ ] Board rotation
    8. [ ] Pawn promotion
-   9. [ ] Possible moves validation
-   10. [ ] Game time control
+   9. [ ] Selecting only own color (opponent will make random moves)
+   10. [ ] Possible moves validation
+   11. [ ] Game time control
 2. [ ] Front-end background
    1. [ ] Application background
    2. [ ] Background image/color
