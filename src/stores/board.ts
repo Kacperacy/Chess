@@ -278,6 +278,9 @@ export const useBoardListStore = defineStore("board", {
       this.clearPossibleMoves();
 
       if (this.chess.gameOver()) {
+        this.chess.reset();
+        this.loadFEN(this.chess.fen());
+        return;
       }
     },
     getHistory() {
