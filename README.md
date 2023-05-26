@@ -6,6 +6,13 @@ Application like [chess.com](https://www.chess.com/) or [lichess](https://liches
 
 I've setuped [Github projects roadmap](https://github.com/users/Kacperacy/projects/1/views/5) where you can see every task that I'll work on.
 
+## How to run
+
+To run application you must clone repo and use this commands:
+
+1. `npm install`
+2. `npm run dev`
+
 ## Plans
 1. [x] Playable chess game on front-end side
    1. [x] Board
@@ -43,10 +50,3 @@ I've setuped [Github projects roadmap](https://github.com/users/Kacperacy/projec
 - TailwindCSS
 - .NET 7 (planned to move to version 8 on release)
 - PostgreSQL
-
-## How to run
-
-To run application you must clone repo and use this commands:
-
-1. `npm install`
-2. `npm run dev`
