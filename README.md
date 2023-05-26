@@ -4,6 +4,9 @@ Application like [chess.com](https://www.chess.com/) or [lichess](https://liches
 
 ## Roadmap
 
+I've setuped [Github projects roadmap](https://github.com/users/Kacperacy/projects/1/views/5) where you can see every task that I'll work on.
+
+## Plans
 1. [x] Playable chess game on front-end side
    1. [x] Board
    2. [x] Pieces
