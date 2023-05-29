@@ -65,6 +65,7 @@ export const useBoardListStore = defineStore("board", {
 
       if (
         piece != null &&
+        piece.color == ColorType.Light &&
         !(
           this.selectedPiece != null &&
           this.selectedPiece.coordinates.x == x &&
