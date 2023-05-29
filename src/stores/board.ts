@@ -4,11 +4,12 @@ import { Piece } from "../models/piece.model";
 import { PieceType } from "../models/pieceType.model";
 import { GameState } from "../models/gameState.model";
 import { ColorType } from "../models/colorType.model";
-import { Chess } from "chess.ts";
+import { Chess, Move } from "chess.ts";
 
 export type RootState = {
   piecesList: Piece[];
   highlightList: Coordinates[];
+  lastMove: Coordinates[];
   selectedPiece: Piece | null;
   gameState: GameState;
   possibleMoves: Coordinates[];
@@ -30,8 +31,15 @@ export const useBoardListStore = defineStore("board", {
       } as GameState,
       possibleMoves: [],
       chess: new Chess(),
+      lastMove: [],
     } as RootState),
   actions: {
+    initBoard() {
+      const fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+      this.chess.clear();
+      this.chess.load(fen);
+      this.loadFEN(fen);
+    },
     changeHighlight(x: number, y: number) {
       const highlight = this.highlightList.find(
         (obj) => obj.x == x && obj.y == y
@@ -71,6 +79,9 @@ export const useBoardListStore = defineStore("board", {
     clearHighlight() {
       this.highlightList = [];
     },
+    clearLastMove() {
+      this.lastMove = [];
+    },
     clearPieces() {
       this.piecesList = [];
     },
@@ -79,8 +90,9 @@ export const useBoardListStore = defineStore("board", {
     },
     loadFEN(fen: string) {
       this.clearPieces();
-      this.chess.clear();
-      this.chess.load(fen);
+      this.clearHighlight();
+      this.clearLastMove();
+      this.clearPossibleMoves();
 
       let rows = fen.split("/");
       const config = rows[7].split(" ");
@@ -252,6 +264,22 @@ export const useBoardListStore = defineStore("board", {
 
       return xValue + (9 - y);
     },
+    translateMove(move: string) {
+      const moveSign = move.split("");
+      const x = moveSign[0];
+      let coordinates = { y: 9 - Number(moveSign[1]) } as Coordinates;
+
+      if (x == "a") coordinates.x = 1;
+      if (x == "b") coordinates.x = 2;
+      if (x == "c") coordinates.x = 3;
+      if (x == "d") coordinates.x = 4;
+      if (x == "e") coordinates.x = 5;
+      if (x == "f") coordinates.x = 6;
+      if (x == "g") coordinates.x = 7;
+      if (x == "h") coordinates.x = 8;
+
+      return coordinates;
+    },
     tryMove(x: number, y: number) {
       if (this.selectedPiece == null) return false;
 
@@ -277,14 +305,22 @@ export const useBoardListStore = defineStore("board", {
       this.selectedPiece = null;
       this.clearPossibleMoves();
 
+      const lastMove = this.chess.history({ verbose: true }).at(-1) as Move;
+      if (lastMove != null)
+        this.highlightLastMove(
+          this.translateMove(lastMove["from"]),
+          this.translateMove(lastMove["to"])
+        );
+
       if (this.chess.gameOver()) {
         this.chess.reset();
         this.loadFEN(this.chess.fen());
         return;
       }
     },
-    getHistory() {
-      return this.chess.history();
+    highlightLastMove(from: Coordinates, to: Coordinates) {
+      this.clearLastMove();
+      this.lastMove.push(from, to);
     },
   },
 });
