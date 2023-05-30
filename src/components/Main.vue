@@ -46,10 +46,9 @@ function select(e: MouseEvent) {
 <template>
   <div class="w-full h-full flex place-content-center">
     <div
-      id="board"
-      class="relative w-[800px] h-[800px]"
-      @click="select($event)"
-      @contextmenu="highlight($event)"
+      class="relative min-w-[800px] min-h-[800px]"
+      @click="select"
+      @contextmenu="highlight"
     >
       <Board />
       <LastMove />
