@@ -181,6 +181,22 @@ export const useBoardListStore = defineStore("board", {
       const moves = this.chess.moves({ square: square });
 
       moves.forEach((move) => {
+        if (move == "O-O") {
+          this.possibleMoves.push({ x: 7, y: 8 });
+          return;
+        }
+        if (move == "O-O-O") {
+          this.possibleMoves.push({ x: 3, y: 8 });
+          return;
+        }
+        if (move == "o-o") {
+          this.possibleMoves.push({ x: 3, y: 1 });
+          return;
+        }
+        if (move == "o-o-o") {
+          this.possibleMoves.push({ x: 7, y: 1 });
+          return;
+        }
         this.possibleMoves.push(this.translateMove(move));
       });
     },
