@@ -173,83 +173,16 @@ export const useBoardListStore = defineStore("board", {
 
       if (this.selectedPiece == null) return;
 
-      const x = this.selectedPiece.coordinates.x;
-      const y = this.selectedPiece.coordinates.y;
+      const square = this.translateCoordinates(
+        this.selectedPiece.coordinates.x,
+        this.selectedPiece.coordinates.y
+      ) as Square;
 
-      if (this.selectedPiece.type == PieceType.Pawn) {
-        if (this.selectedPiece.color == ColorType.Light) {
-          this.possibleMoves.push(
-            { x: x - 1, y: y - 1 },
-            { x: x, y: y - 1 },
-            { x: x + 1, y: y - 1 }
-          );
-          if (y == 7) this.possibleMoves.push({ x: x, y: y - 2 });
-        } else {
-          this.possibleMoves.push(
-            { x: x - 1, y: y + 1 },
-            { x: x, y: y + 1 },
-            { x: x + 1, y: y + 1 }
-          );
-          if (y == 2) this.possibleMoves.push({ x: x, y: y + 2 });
-        }
-      } else if (this.selectedPiece.type == PieceType.Bishop) {
-        for (let i = 1; i < 8; i++) {
-          this.possibleMoves.push(
-            { x: x - i, y: y - i },
-            { x: x + i, y: y - i },
-            { x: x + i, y: y + i },
-            { x: x - i, y: y + i }
-          );
-        }
-      } else if (this.selectedPiece.type == PieceType.Knight) {
-        this.possibleMoves.push(
-          { x: x - 2, y: y - 1 },
-          { x: x + 2, y: y - 1 },
-          { x: x + 2, y: y + 1 },
-          { x: x - 2, y: y + 1 },
-          { x: x - 1, y: y - 2 },
-          { x: x + 1, y: y - 2 },
-          { x: x + 1, y: y + 2 },
-          { x: x - 1, y: y + 2 }
-        );
-      } else if (this.selectedPiece.type == PieceType.Rook) {
-        for (let i = 1; i < 8; i++) {
-          this.possibleMoves.push(
-            { x: x - i, y: y },
-            { x: x + i, y: y },
-            { x: x, y: y + i },
-            { x: x, y: y - i }
-          );
-        }
-      } else if (this.selectedPiece.type == PieceType.King) {
-        this.possibleMoves.push(
-          { x: x + 1, y: y },
-          { x: x - 1, y: y },
-          { x: x, y: y + 1 },
-          { x: x, y: y - 1 },
-          { x: x + 1, y: y + 1 },
-          { x: x + 1, y: y - 1 },
-          { x: x - 1, y: y + 1 },
-          { x: x - 1, y: y - 1 }
-        );
-        // TODO: castling
-      } else if (this.selectedPiece.type == PieceType.Queen) {
-        for (let i = 1; i < 8; i++) {
-          this.possibleMoves.push(
-            { x: x - i, y: y },
-            { x: x + i, y: y },
-            { x: x, y: y + i },
-            { x: x, y: y - i },
-            { x: x - i, y: y - i },
-            { x: x + i, y: y - i },
-            { x: x + i, y: y + i },
-            { x: x - i, y: y + i }
-          );
-        }
-      }
-      this.possibleMoves = this.possibleMoves.filter(
-        (obj) => obj.x >= 1 && obj.x <= 8 && obj.y >= 1 && obj.y <= 8
-      );
+      const moves = this.chess.moves({ square: square });
+
+      moves.forEach((move) => {
+        this.possibleMoves.push(this.translateMove(move));
+      });
     },
     translateCoordinates(x: number, y: number) {
       let xValue = "";
@@ -266,7 +199,7 @@ export const useBoardListStore = defineStore("board", {
       return xValue + (9 - y);
     },
     translateMove(move: string) {
-      const moveSign = move.split("");
+      const moveSign = move.slice(-2);
       const x = moveSign[0];
       const coordinates = { y: 9 - Number(moveSign[1]) } as Coordinates;
 
