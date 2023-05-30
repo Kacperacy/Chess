@@ -44,7 +44,7 @@ function select(e: MouseEvent) {
 </script>
 
 <template>
-  <div class="w-[100vw] h-[100vh] flex place-content-center bg-[#e28743]">
+  <div class="w-screen h-screen flex place-content-center bg-[#e28743]">
     <div
       ref="board"
       class="relative min-w-[800px] max-w-[800px] min-h-[800px] max-h-[800px] mt-[5%]"
