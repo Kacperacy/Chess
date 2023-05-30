@@ -215,7 +215,8 @@ export const useBoardListStore = defineStore("board", {
       return xValue + (9 - y);
     },
     translateMove(move: string) {
-      move = move.replace(/#|\+/g, "");
+      move = move.replace(/#|\+|=B|=N|=R|=Q/g, "");
+
       const moveSign = move.slice(-2);
       const x = moveSign[0];
       const coordinates = { y: 9 - Number(moveSign[1]) } as Coordinates;
