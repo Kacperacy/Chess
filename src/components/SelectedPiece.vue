@@ -1,15 +1,10 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useBoardListStore } from "../stores/board";
-import { Chess } from "chess.ts";
 
 const store = useBoardListStore();
 
 const { selectedPiece } = storeToRefs(store);
-
-const chess = new Chess();
-
-const moves = chess.moves();
 </script>
 <template>
   <div

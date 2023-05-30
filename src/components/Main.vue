@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useBoardListStore } from "../stores/board";
-import { Chess } from "chess.ts";
 import Board from "./Board.vue";
 import Highlights from "./Highlights.vue";
 import SelectedSquare from "./SelectedPiece.vue";
@@ -11,7 +10,6 @@ import LastMove from "./LastMove.vue";
 import { ref } from "vue";
 
 const store = useBoardListStore();
-const { highlightList, piecesList } = storeToRefs(store);
 const { changeHighlight, changeSelect, initBoard } = store;
 const board = ref(null as unknown as HTMLElement);
 

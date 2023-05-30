@@ -4,7 +4,7 @@ import { Piece } from "../models/piece.model";
 import { PieceType } from "../models/pieceType.model";
 import { GameState } from "../models/gameState.model";
 import { ColorType } from "../models/colorType.model";
-import { Chess, Move } from "chess.ts";
+import { Chess, Move, Square } from "chess.js";
 
 export type RootState = {
   piecesList: Piece[];
@@ -290,30 +290,38 @@ export const useBoardListStore = defineStore("board", {
       );
       const to = this.translateCoordinates(x, y);
 
-      const move = this.chess.move({ from, to });
+      const moves = this.chess.moves({ square: from as Square, verbose: true });
+      const move = moves.find((obj) => obj.to == to);
 
-      if (move) {
+      if (move != null) {
+        this.chess.move({ from, to });
         this.movePiece();
         return true;
       }
       return false;
     },
     movePiece() {
-      const moves = this.chess.moves();
-      this.chess.move(moves[Math.floor(Math.random() * moves.length)]);
+      if (this.chess.isGameOver()) {
+        this.chess.reset();
+        this.loadFEN(this.chess.fen());
+        return;
+      }
+
+      const moves = this.chess.moves({ verbose: true });
+      const move = moves[Math.floor(Math.random() * moves.length)];
+      this.chess.move(move);
       this.loadFEN(this.chess.fen());
 
       this.selectedPiece = null;
       this.clearPossibleMoves();
 
-      const lastMove = this.chess.history({ verbose: true }).at(-1) as Move;
-      if (lastMove != null)
+      if (move != null)
         this.highlightLastMove(
-          this.translateMove(lastMove["from"]),
-          this.translateMove(lastMove["to"])
+          this.translateMove(move["from"]),
+          this.translateMove(move["to"])
         );
 
-      if (this.chess.gameOver()) {
+      if (this.chess.isGameOver()) {
         this.chess.reset();
         this.loadFEN(this.chess.fen());
         return;
