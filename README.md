@@ -19,12 +19,12 @@ To run application you must clone repo and use this commands:
    2. [x] Pieces
    3. [x] Pieces movement
    4. [x] Move validation
-   5. [ ] Game result
+   5. [x] Game result
    6. [x] Position loading from FEN
    7. [ ] Board rotation
    8. [ ] Pawn promotion
-   9. [ ] Selecting only own color (opponent will make random moves)
-   10. [ ] Possible moves validation
+   9. [x] Selecting only own color (opponent will make random moves)
+   10. [x] Possible moves validation
    11. [ ] Game time control
 2. [ ] Front-end background
    1. [ ] Application background
