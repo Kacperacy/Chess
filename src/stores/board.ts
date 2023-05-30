@@ -95,7 +95,7 @@ export const useBoardListStore = defineStore("board", {
       this.clearLastMove();
       this.clearPossibleMoves();
 
-      let rows = fen.split("/");
+      const rows = fen.split("/");
       const config = rows[7].split(" ");
       rows[7] = config.shift() as string;
       this.gameState.turn = config.shift() as string;
@@ -108,12 +108,12 @@ export const useBoardListStore = defineStore("board", {
 
       rows.forEach((row) => {
         row.split("").forEach((letter) => {
-          let num = Number(letter);
+          const num = Number(letter);
           if (Number.isNaN(num)) {
-            let x = (pos % 8) + 1;
-            let y = Math.floor(pos / 8) + 1;
+            const x = (pos % 8) + 1;
+            const y = Math.floor(pos / 8) + 1;
 
-            let piece = {
+            const piece = {
               color: (letter == letter.toUpperCase()
                 ? ColorType.Light
                 : ColorType.Dark) as ColorType,
@@ -268,7 +268,7 @@ export const useBoardListStore = defineStore("board", {
     translateMove(move: string) {
       const moveSign = move.split("");
       const x = moveSign[0];
-      let coordinates = { y: 9 - Number(moveSign[1]) } as Coordinates;
+      const coordinates = { y: 9 - Number(moveSign[1]) } as Coordinates;
 
       if (x == "a") coordinates.x = 1;
       if (x == "b") coordinates.x = 2;
