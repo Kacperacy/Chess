@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useBoardListStore } from "../stores/board";
+import { useBoardStore } from "../stores/board";
 import Board from "./Board.vue";
 import Highlights from "./Highlights.vue";
 import SelectedSquare from "./SelectedPiece.vue";
@@ -8,8 +8,9 @@ import Pieces from "./Pieces.vue";
 import PossibleMoves from "./PossibleMoves.vue";
 import LastMove from "./LastMove.vue";
 import { ref } from "vue";
+import GameResult from "./GameResult.vue";
 
-const store = useBoardListStore();
+const store = useBoardStore();
 const { changeHighlight, changeSelect, initBoard } = store;
 const board = ref(null as unknown as HTMLElement);
 
@@ -43,10 +44,10 @@ function select(e: MouseEvent) {
 </script>
 
 <template>
-  <div class="w-full h-full flex place-content-center">
+  <div class="w-[100vw] h-[100vh] flex place-content-center bg-[#e28743]">
     <div
       ref="board"
-      class="relative min-w-[800px] min-h-[800px]"
+      class="relative min-w-[800px] max-w-[800px] min-h-[800px] max-h-[800px] mt-[5%]"
       @click="select"
       @contextmenu="highlight"
     >
@@ -57,5 +58,6 @@ function select(e: MouseEvent) {
       <Pieces />
       <PossibleMoves />
     </div>
+    <GameResult v-if="!store.isGameOnGoing()" />
   </div>
 </template>

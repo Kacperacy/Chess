@@ -5,6 +5,7 @@ import { PieceType } from "../models/pieceType.model";
 import { GameState } from "../models/gameState.model";
 import { ColorType } from "../models/colorType.model";
 import { Chess, Move, Square } from "chess.js";
+import { GameResultEnum } from "../models/gameResultEnum.model";
 
 export type RootState = {
   piecesList: Piece[];
@@ -14,9 +15,10 @@ export type RootState = {
   gameState: GameState;
   possibleMoves: Coordinates[];
   chess: Chess;
+  gameResult: GameResultEnum;
 };
 
-export const useBoardListStore = defineStore("board", {
+export const useBoardStore = defineStore("board", {
   state: () =>
     ({
       piecesList: [],
@@ -32,10 +34,12 @@ export const useBoardListStore = defineStore("board", {
       possibleMoves: [],
       chess: new Chess(),
       lastMove: [],
+      gameResult: GameResultEnum.OnGoing,
     } as RootState),
   actions: {
     initBoard() {
       const fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+      this.gameResult = GameResultEnum.OnGoing;
       this.chess.clear();
       this.chess.load(fen);
       this.loadFEN(fen);
@@ -252,15 +256,15 @@ export const useBoardListStore = defineStore("board", {
       return false;
     },
     movePiece() {
-      if (this.chess.isGameOver()) {
-        this.chess.reset();
-        this.loadFEN(this.chess.fen());
-        return;
-      }
+      this.loadFEN(this.chess.fen());
+
+      this.checkGameResult();
+      if (!this.isGameOnGoing()) return;
 
       const moves = this.chess.moves({ verbose: true });
       const move = moves[Math.floor(Math.random() * moves.length)];
       this.chess.move(move);
+
       this.loadFEN(this.chess.fen());
 
       this.selectedPiece = null;
@@ -272,15 +276,33 @@ export const useBoardListStore = defineStore("board", {
           this.translateMove(move["to"])
         );
 
-      if (this.chess.isGameOver()) {
-        this.chess.reset();
-        this.loadFEN(this.chess.fen());
-        return;
-      }
+      this.checkGameResult();
+      if (!this.isGameOnGoing()) return;
     },
     highlightLastMove(from: Coordinates, to: Coordinates) {
       this.clearLastMove();
       this.lastMove.push(from, to);
+    },
+    checkGameResult() {
+      if (this.chess.isCheckmate()) {
+        const turn = this.chess.turn();
+        if (turn == "w") {
+          this.gameResult = GameResultEnum.DarkWon;
+        } else if (turn == "b") {
+          this.gameResult = GameResultEnum.LightWon;
+        }
+      } else if (this.chess.isInsufficientMaterial()) {
+        this.gameResult = GameResultEnum.InsufficientMaterial;
+      } else if (this.chess.isStalemate()) {
+        this.gameResult = GameResultEnum.Stalemate;
+      } else if (this.chess.isThreefoldRepetition()) {
+        this.gameResult = GameResultEnum.Repetition;
+      } else if (this.gameState.halfmovesCount >= 100) {
+        this.gameResult = GameResultEnum.Over50HalfMoves;
+      }
+    },
+    isGameOnGoing() {
+      return this.gameResult == GameResultEnum.OnGoing;
     },
   },
 });

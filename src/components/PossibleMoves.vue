@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useBoardListStore } from "../stores/board";
+import { useBoardStore } from "../stores/board";
 
-const store = useBoardListStore();
+const store = useBoardStore();
 
 const { possibleMoves } = storeToRefs(store);
 </script>
