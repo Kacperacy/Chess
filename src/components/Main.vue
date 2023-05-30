@@ -8,17 +8,18 @@ import SelectedSquare from "./SelectedPiece.vue";
 import Pieces from "./Pieces.vue";
 import PossibleMoves from "./PossibleMoves.vue";
 import LastMove from "./LastMove.vue";
+import { ref } from "vue";
 
 const store = useBoardListStore();
 const { highlightList, piecesList } = storeToRefs(store);
 const { changeHighlight, changeSelect, initBoard } = store;
+const board = ref(null as unknown as HTMLElement);
 
 initBoard();
 
 function getPositionClicked(e: MouseEvent) {
-  const board: HTMLElement | null = document.getElementById("board");
-  if (!board) return;
-  const boardRect = board.getBoundingClientRect();
+  if (board.value == null) return;
+  const boardRect = board.value.getBoundingClientRect();
   const offsetX = e.clientX - boardRect.left;
   const offsetY = e.clientY - boardRect.top;
 
@@ -46,6 +47,7 @@ function select(e: MouseEvent) {
 <template>
   <div class="w-full h-full flex place-content-center">
     <div
+      ref="board"
       class="relative min-w-[800px] min-h-[800px]"
       @click="select"
       @contextmenu="highlight"
