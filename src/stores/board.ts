@@ -46,7 +46,7 @@ export const useBoardStore = defineStore("board", {
     } as RootState),
   actions: {
     initBoard() {
-      const fen = "rnbqkbnr/ppppppPp/8/8/8/8/PPpPPPPP/RNBQKBNR w KQkq - 0 1";
+      const fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
       this.gameResult = GameResultEnum.OnGoing;
       this.clearLastMove();
       this.chess.clear();
