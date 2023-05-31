@@ -22,7 +22,7 @@ To run application you must clone repo and use this commands:
    5. [x] Game result
    6. [x] Position loading from FEN
    7. [ ] Board rotation
-   8. [ ] Pawn promotion
+   8. [x] Pawn promotion
    9. [x] Selecting only own color (opponent will make random moves)
    10. [x] Possible moves validation
    11. [ ] Game time control
