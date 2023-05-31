@@ -1,7 +1,7 @@
 export interface GameState {
   turn: string;
   castles: string;
-  enpassant: string;
-  halfmovesCount: number;
+  enPassant: string;
+  halfMovesCount: number;
   movesCount: number;
 }

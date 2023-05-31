@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
 import { useBoardStore } from "../stores/board";
 import { computed } from "vue";
 import { GameResultEnum } from "../models/gameResultEnum.model";
