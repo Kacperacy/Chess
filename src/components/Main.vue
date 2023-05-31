@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
 import { useBoardStore } from "../stores/board";
+import { ColorType } from "../models/colorType.model";
+import { ref } from "vue";
 import Board from "./Board.vue";
 import Highlights from "./Highlights.vue";
 import SelectedSquare from "./SelectedPiece.vue";
 import Pieces from "./Pieces.vue";
 import PossibleMoves from "./PossibleMoves.vue";
 import LastMove from "./LastMove.vue";
-import { ref } from "vue";
 import GameResult from "./GameResult.vue";
+import PawnPromotion from "./PawnPromotion.vue";
 
 const store = useBoardStore();
 const { changeHighlight, changeSelect, initBoard } = store;
@@ -57,6 +58,7 @@ function select(e: MouseEvent) {
       <SelectedSquare />
       <Pieces />
       <PossibleMoves />
+      <PawnPromotion v-if="store.isPromotion()" />
     </div>
     <GameResult v-if="!store.isGameOnGoing()" />
   </div>

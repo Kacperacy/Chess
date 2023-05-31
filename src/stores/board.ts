@@ -6,6 +6,7 @@ import { GameState } from "../models/gameState.model";
 import { ColorType } from "../models/colorType.model";
 import { Chess, Move, Square } from "chess.js";
 import { GameResultEnum } from "../models/gameResultEnum.model";
+import { Promotion } from "../models/promotion.model";
 
 export type RootState = {
   piecesList: Piece[];
@@ -16,6 +17,7 @@ export type RootState = {
   possibleMoves: Coordinates[];
   chess: Chess;
   gameResult: GameResultEnum;
+  promotion: Promotion;
 };
 
 export const useBoardStore = defineStore("board", {
@@ -23,22 +25,28 @@ export const useBoardStore = defineStore("board", {
     ({
       piecesList: [],
       highlightList: [],
-      selectedPiece: null as unknown as Piece,
+      selectedPiece: null,
       gameState: {
         turn: "w",
         castles: "KQkq",
-        enpassant: "-",
-        halfmovesCount: 0,
+        enPassant: "-",
+        halfMovesCount: 0,
         movesCount: 1,
-      } as GameState,
+      },
       possibleMoves: [],
       chess: new Chess(),
       lastMove: [],
       gameResult: GameResultEnum.OnGoing,
+      promotion: {
+        isPromotion: false,
+        color: null,
+        column: null,
+        move: null,
+      },
     } as RootState),
   actions: {
     initBoard() {
-      const fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+      const fen = "rnbqkbnr/ppppppPp/8/8/8/8/PPpPPPPP/RNBQKBNR w KQkq - 0 1";
       this.gameResult = GameResultEnum.OnGoing;
       this.clearLastMove();
       this.chess.clear();
@@ -61,6 +69,7 @@ export const useBoardStore = defineStore("board", {
     },
     changeSelect(x: number, y: number) {
       this.clearHighlight();
+      this.clearPromotion();
 
       if (this.tryMove(x, y)) return;
 
@@ -105,8 +114,8 @@ export const useBoardStore = defineStore("board", {
       rows[7] = config.shift() as string;
       this.gameState.turn = config.shift() as string;
       this.gameState.castles = config.shift() as string;
-      this.gameState.enpassant = config.shift() as string;
-      this.gameState.halfmovesCount = Number(config.shift());
+      this.gameState.enPassant = config.shift() as string;
+      this.gameState.halfMovesCount = Number(config.shift());
       this.gameState.movesCount = Number(config.shift());
 
       let pos: number = 0;
@@ -167,8 +176,8 @@ export const useBoardStore = defineStore("board", {
 
       fen += " " + this.gameState.turn;
       fen += " " + this.gameState.castles;
-      fen += " " + this.gameState.enpassant;
-      fen += " " + this.gameState.halfmovesCount;
+      fen += " " + this.gameState.enPassant;
+      fen += " " + this.gameState.halfMovesCount;
       fen += " " + this.gameState.movesCount;
 
       return fen;
@@ -250,12 +259,19 @@ export const useBoardStore = defineStore("board", {
       const move = moves.find((obj) => obj.to == to);
 
       if (move != null) {
+        if (move.san.includes("=")) {
+          this.promotion.isPromotion = true;
+          this.promotion.color =
+            this.chess.turn() == "b" ? ColorType.Dark : ColorType.Light;
+          this.promotion.column = x;
+          this.promotion.move = move;
+          return true;
+        }
         this.chess.move({ from, to });
         this.highlightLastMove(
           this.translateMove(move["from"]),
           this.translateMove(move["to"])
         );
-        console.log(from, to);
 
         this.movePiece();
         return true;
@@ -274,7 +290,6 @@ export const useBoardStore = defineStore("board", {
 
       this.loadFEN(this.chess.fen());
 
-      this.selectedPiece = null;
       this.clearPossibleMoves();
 
       if (move != null)
@@ -287,8 +302,6 @@ export const useBoardStore = defineStore("board", {
       if (!this.isGameOnGoing()) return;
     },
     highlightLastMove(from: Coordinates, to: Coordinates) {
-      console.log(from, to);
-
       this.clearLastMove();
       this.lastMove.push(from, to);
     },
@@ -306,12 +319,38 @@ export const useBoardStore = defineStore("board", {
         this.gameResult = GameResultEnum.Stalemate;
       } else if (this.chess.isThreefoldRepetition()) {
         this.gameResult = GameResultEnum.Repetition;
-      } else if (this.gameState.halfmovesCount >= 100) {
+      } else if (this.gameState.halfMovesCount >= 100) {
         this.gameResult = GameResultEnum.Over50HalfMoves;
       }
     },
     isGameOnGoing() {
       return this.gameResult == GameResultEnum.OnGoing;
+    },
+    isPromotion() {
+      return this.promotion.isPromotion;
+    },
+    promote(piece: string) {
+      if (this.promotion.move == null) return;
+      console.log("x");
+
+      const from = this.promotion.move["from"];
+      const to = this.promotion.move["to"];
+
+      this.chess.move({ from, to, promotion: piece });
+
+      this.highlightLastMove(
+        this.translateMove(this.promotion.move["from"]),
+        this.translateMove(this.promotion.move["to"])
+      );
+
+      this.clearPromotion();
+      this.movePiece();
+    },
+    clearPromotion() {
+      this.promotion.isPromotion = false;
+      this.promotion.color = null;
+      this.promotion.column = null;
+      this.promotion.move = null;
     },
   },
 });
