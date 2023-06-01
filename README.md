@@ -26,6 +26,7 @@ To run application you must clone repo and use this commands:
    9. [x] Selecting only own color (opponent will make random moves)
    10. [x] Possible moves validation
    11. [ ] Game time control
+   12. [ ] Drag&Drop pieces
 2. [ ] Front-end background
    1. [ ] Application background
    2. [ ] Background image/color
