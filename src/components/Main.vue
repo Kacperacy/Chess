@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useBoardStore } from "../stores/board";
-import { ColorType } from "../models/colorType.model";
 import { ref } from "vue";
 import Board from "./Board.vue";
 import Highlights from "./Highlights.vue";

@@ -1,19 +1,14 @@
 import { defineStore } from "pinia";
 import { Coordinates } from "../models/coordinates.model";
 import { Piece } from "../models/piece.model";
-import { PieceType } from "../models/pieceType.model";
-import { GameState } from "../models/gameState.model";
-import { ColorType } from "../models/colorType.model";
-import { Chess, Move, Square } from "chess.js";
+import { Chess, Color, Move, PieceSymbol, Square } from "chess.js";
 import { GameResultEnum } from "../models/gameResultEnum.model";
 import { Promotion } from "../models/promotion.model";
 
 export type RootState = {
-  piecesList: Piece[];
   highlightList: Coordinates[];
   lastMove: Coordinates[];
   selectedPiece: Piece | null;
-  gameState: GameState;
   possibleMoves: Coordinates[];
   chess: Chess;
   gameResult: GameResultEnum;
@@ -23,16 +18,8 @@ export type RootState = {
 export const useBoardStore = defineStore("board", {
   state: () =>
     ({
-      piecesList: [],
       highlightList: [],
       selectedPiece: null,
-      gameState: {
-        turn: "w",
-        castles: "KQkq",
-        enPassant: "-",
-        halfMovesCount: 0,
-        movesCount: 1,
-      },
       possibleMoves: [],
       chess: new Chess(),
       lastMove: [],
@@ -51,7 +38,6 @@ export const useBoardStore = defineStore("board", {
       this.clearLastMove();
       this.chess.clear();
       this.chess.load(fen);
-      this.loadFEN(fen);
     },
     changeHighlight(x: number, y: number) {
       const highlight = this.highlightList.find(
@@ -71,23 +57,30 @@ export const useBoardStore = defineStore("board", {
       this.clearHighlight();
       this.clearPromotion();
 
+      const move = this.translateCoordinates(x, y);
+
       if (this.tryMove(x, y)) return;
 
-      const piece = this.piecesList.find(
-        (obj) => obj.coordinates.x == x && obj.coordinates.y == y
-      );
+      const piece = this.chess
+        .board()
+        .flat()
+        .find((obj) => obj?.square == move);
 
       if (
         piece != null &&
-        piece.color == ColorType.Light &&
+        piece.color == "w" &&
         !(
           this.selectedPiece != null &&
           this.selectedPiece.coordinates.x == x &&
           this.selectedPiece.coordinates.y == y
         )
-      )
-        this.selectedPiece = piece;
-      else this.selectedPiece = null;
+      ) {
+        this.selectedPiece = {
+          color: piece.color,
+          type: piece.type,
+          coordinates: this.translateMove(piece.square),
+        };
+      } else this.selectedPiece = null;
 
       this.updatePossibleMoves();
     },
@@ -97,90 +90,8 @@ export const useBoardStore = defineStore("board", {
     clearLastMove() {
       this.lastMove = [];
     },
-    clearPieces() {
-      this.piecesList = [];
-    },
     clearPossibleMoves() {
       this.possibleMoves = [];
-    },
-    loadFEN(fen: string) {
-      this.clearPieces();
-      this.clearHighlight();
-      this.clearPossibleMoves();
-      this.selectedPiece = null;
-
-      const rows = fen.split("/");
-      const config = rows[7].split(" ");
-      rows[7] = config.shift() as string;
-      this.gameState.turn = config.shift() as string;
-      this.gameState.castles = config.shift() as string;
-      this.gameState.enPassant = config.shift() as string;
-      this.gameState.halfMovesCount = Number(config.shift());
-      this.gameState.movesCount = Number(config.shift());
-
-      let pos: number = 0;
-
-      rows.forEach((row) => {
-        row.split("").forEach((letter) => {
-          const num = Number(letter);
-          if (Number.isNaN(num)) {
-            const x = (pos % 8) + 1;
-            const y = Math.floor(pos / 8) + 1;
-
-            const piece = {
-              color: (letter == letter.toUpperCase()
-                ? ColorType.Light
-                : ColorType.Dark) as ColorType,
-              coordinates: { x, y } as Coordinates,
-              type: null as unknown as PieceType,
-            };
-
-            if (letter.toLowerCase() == "p") piece.type = PieceType.Pawn;
-            else if (letter.toLowerCase() == "b") piece.type = PieceType.Bishop;
-            else if (letter.toLowerCase() == "n") piece.type = PieceType.Knight;
-            else if (letter.toLowerCase() == "r") piece.type = PieceType.Rook;
-            else if (letter.toLowerCase() == "q") piece.type = PieceType.Queen;
-            else if (letter.toLowerCase() == "k") piece.type = PieceType.King;
-
-            this.piecesList.push(piece);
-            pos++;
-          } else {
-            pos += num;
-          }
-        });
-      });
-    },
-    getFEN() {
-      let fen = "";
-      for (let y = 1; y < 9; y++) {
-        let counter = 0;
-        for (let x = 1; x < 9; x++) {
-          const piece = this.piecesList.find(
-            (obj) => obj.coordinates.x == x && obj.coordinates.y == y
-          );
-
-          if (piece == null) {
-            counter++;
-          } else {
-            if (counter > 0) fen += counter;
-            counter = 0;
-
-            if (piece.color == ColorType.Light) fen += piece.type.toUpperCase();
-            else fen += piece.type;
-          }
-        }
-        if (counter > 0) fen += counter;
-
-        if (y < 8) fen += "/";
-      }
-
-      fen += " " + this.gameState.turn;
-      fen += " " + this.gameState.castles;
-      fen += " " + this.gameState.enPassant;
-      fen += " " + this.gameState.halfMovesCount;
-      fen += " " + this.gameState.movesCount;
-
-      return fen;
     },
     updatePossibleMoves() {
       this.clearPossibleMoves();
@@ -261,8 +172,7 @@ export const useBoardStore = defineStore("board", {
       if (move != null) {
         if (move.san.includes("=")) {
           this.promotion.isPromotion = true;
-          this.promotion.color =
-            this.chess.turn() == "b" ? ColorType.Dark : ColorType.Light;
+          this.promotion.color = this.chess.turn();
           this.promotion.column = x;
           this.promotion.move = move;
           return true;
@@ -279,16 +189,12 @@ export const useBoardStore = defineStore("board", {
       return false;
     },
     movePiece() {
-      this.loadFEN(this.chess.fen());
-
       this.checkGameResult();
       if (!this.isGameOnGoing()) return;
 
       const moves = this.chess.moves({ verbose: true });
       const move = moves[Math.floor(Math.random() * moves.length)];
       this.chess.move(move);
-
-      this.loadFEN(this.chess.fen());
 
       this.clearPossibleMoves();
 
@@ -319,9 +225,10 @@ export const useBoardStore = defineStore("board", {
         this.gameResult = GameResultEnum.Stalemate;
       } else if (this.chess.isThreefoldRepetition()) {
         this.gameResult = GameResultEnum.Repetition;
-      } else if (this.gameState.halfMovesCount >= 100) {
-        this.gameResult = GameResultEnum.Over50HalfMoves;
       }
+      // else if (this.gameState.halfMovesCount >= 100) {
+      //   this.gameResult = GameResultEnum.Over50HalfMoves;
+      // }
     },
     isGameOnGoing() {
       return this.gameResult == GameResultEnum.OnGoing;
@@ -351,6 +258,22 @@ export const useBoardStore = defineStore("board", {
       this.promotion.color = null;
       this.promotion.column = null;
       this.promotion.move = null;
+    },
+    getBoard() {
+      return this.chess
+        .board()
+        .flat()
+        .filter(
+          (obj): obj is { square: Square; type: PieceSymbol; color: Color } =>
+            !!obj
+        )
+        .map((obj): Piece => {
+          return {
+            coordinates: this.translateMove(obj.square),
+            color: obj.color,
+            type: obj.type,
+          };
+        });
     },
   },
 });

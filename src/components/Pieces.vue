@@ -5,11 +5,12 @@ import Piece from "./Piece.vue";
 import { ref, watch } from "vue";
 
 const store = useBoardStore();
-const { piecesList } = storeToRefs(store);
-
-watch(piecesList, (currentValue, oldValue) => {});
 </script>
 
 <template>
-  <Piece v-for="(piece, index) in piecesList" :key="index" :piece="piece" />
+  <Piece
+    v-for="(piece, index) in store.getBoard()"
+    :key="index"
+    :piece="piece"
+  />
 </template>

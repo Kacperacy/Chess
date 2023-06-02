@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { ColorType } from "../models/colorType.model";
 import { useBoardStore } from "../stores/board";
 
 const store = useBoardStore();
 
 const colorCss = computed(() => {
-  return store.promotion.color == ColorType.Light ? "light" : "dark";
+  return store.promotion.color == "w" ? "light" : "dark";
 });
 
 const column = computed(() => {

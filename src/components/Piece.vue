@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { Piece } from "../models/piece.model";
 import { computed, getCurrentInstance, ref, watch } from "vue";
-import { PieceType } from "../models/pieceType.model";
-import { ColorType } from "../models/colorType.model";
 
 const props = defineProps<{ piece: Piece }>();
 
@@ -10,15 +8,15 @@ let classCss = "";
 
 const pieceClass = computed(() => {
   classCss = "";
-  if (props.piece.color == ColorType.Light) classCss = "light-";
+  if (props.piece.color == "w") classCss = "light-";
   else classCss = "dark-";
 
-  if (props.piece.type == PieceType.Pawn) classCss += "pawn";
-  else if (props.piece.type == PieceType.Bishop) classCss += "bishop";
-  else if (props.piece.type == PieceType.Knight) classCss += "knight";
-  else if (props.piece.type == PieceType.Rook) classCss += "rook";
-  else if (props.piece.type == PieceType.Queen) classCss += "queen";
-  else if (props.piece.type == PieceType.King) classCss += "king";
+  if (props.piece.type == "p") classCss += "pawn";
+  else if (props.piece.type == "b") classCss += "bishop";
+  else if (props.piece.type == "n") classCss += "knight";
+  else if (props.piece.type == "r") classCss += "rook";
+  else if (props.piece.type == "q") classCss += "queen";
+  else if (props.piece.type == "k") classCss += "king";
   return classCss;
 });
 </script>

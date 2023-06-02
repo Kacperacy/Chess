@@ -1,9 +1,8 @@
-import { Move } from "chess.js";
-import { ColorType } from "./colorType.model";
+import { Color, Move } from "chess.js";
 
 export interface Promotion {
   isPromotion: boolean;
-  color: ColorType | null;
+  color: Color | null;
   column: number | null;
   move: Move | null;
 }

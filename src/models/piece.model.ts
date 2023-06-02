@@ -1,9 +1,8 @@
-import { ColorType } from "./colorType.model";
+import { Color, PieceSymbol, Square } from "chess.js";
 import { Coordinates } from "./coordinates.model";
-import { PieceType } from "./pieceType.model";
 
 export interface Piece {
-  type: PieceType;
-  color: ColorType;
+  type: PieceSymbol;
+  color: Color;
   coordinates: Coordinates;
 }
