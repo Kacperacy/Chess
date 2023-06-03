@@ -9,7 +9,7 @@ const { highlightList } = storeToRefs(store);
 <template>
   <div
     v-for="highlight in highlightList"
-    class="absolute top-0 left-0 w-[12.5%] h-[12.5%] bg-opacity-80 bg-[color:red] transform"
+    class="absolute top-0 left-0 w-[12.5%] h-[12.5%] bg-opacity-80 bg-[color:red] transform pointer-events-none"
     :class="[
       'translate-x-[' + (highlight.x - 1) * 100 + '%]',
       'translate-y-[' + (highlight.y - 1) * 100 + '%]',

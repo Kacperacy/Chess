@@ -36,6 +36,9 @@ export const useBoardStore = defineStore("board", {
       const fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
       this.gameResult = GameResultEnum.OnGoing;
       this.clearLastMove();
+      this.clearHighlight();
+      this.clearPromotion();
+      this.clearSelectedPiece();
       this.chess.clear();
       this.chess.load(fen);
     },
@@ -50,8 +53,7 @@ export const useBoardStore = defineStore("board", {
       } else {
         this.highlightList.push({ x, y });
       }
-      this.selectedPiece = null;
-      this.clearPossibleMoves();
+      this.clearSelectedPiece();
     },
     changeSelect(x: number, y: number) {
       this.clearHighlight();
@@ -80,7 +82,7 @@ export const useBoardStore = defineStore("board", {
           type: piece.type,
           coordinates: this.translateMove(piece.square),
         };
-      } else this.selectedPiece = null;
+      } else this.clearSelectedPiece();
 
       this.updatePossibleMoves();
     },
@@ -92,6 +94,10 @@ export const useBoardStore = defineStore("board", {
     },
     clearPossibleMoves() {
       this.possibleMoves = [];
+    },
+    clearSelectedPiece() {
+      this.selectedPiece = null;
+      this.clearPossibleMoves();
     },
     updatePossibleMoves() {
       this.clearPossibleMoves();
@@ -189,6 +195,7 @@ export const useBoardStore = defineStore("board", {
       return false;
     },
     movePiece() {
+      this.clearSelectedPiece();
       this.checkGameResult();
       if (!this.isGameOnGoing()) return;
 
