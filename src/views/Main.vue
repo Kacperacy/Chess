@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { useBoardStore } from "../stores/board";
 import { ref } from "vue";
-import Board from "./Board.vue";
-import Highlights from "./Highlights.vue";
-import SelectedSquare from "./SelectedPiece.vue";
-import Pieces from "./Pieces.vue";
-import PossibleMoves from "./PossibleMoves.vue";
-import LastMove from "./LastMove.vue";
-import GameResult from "./GameResult.vue";
-import PawnPromotion from "./PawnPromotion.vue";
+import Board from "../components/Board.vue";
+import Highlights from "../components/Highlights.vue";
+import SelectedSquare from "../components/SelectedPiece.vue";
+import Pieces from "../components/Pieces.vue";
+import PossibleMoves from "../components/PossibleMoves.vue";
+import LastMove from "../components/LastMove.vue";
+import GameResult from "../components/GameResult.vue";
+import PawnPromotion from "../components/PawnPromotion.vue";
 
 const store = useBoardStore();
-const { changeHighlight, changeSelect, initBoard } = store;
+const { changeHighlight, changeSelectedSquare, initBoard } = store;
 const board = ref(null as unknown as HTMLElement);
 
 initBoard();
@@ -39,7 +39,7 @@ function select(e: MouseEvent) {
   e.preventDefault();
   const clickedPos = getPositionClicked(e);
   if (clickedPos == null) return;
-  changeSelect(clickedPos.x, clickedPos.y);
+  changeSelectedSquare(clickedPos.x, clickedPos.y);
 }
 </script>
 
@@ -59,6 +59,6 @@ function select(e: MouseEvent) {
       <PossibleMoves />
       <PawnPromotion v-if="store.isPromotion()" />
     </div>
-    <GameResult v-if="!store.isGameOnGoing()" />
+    <GameResult v-if="store.gameResult != 'OnGoing'" />
   </div>
 </template>

@@ -1,9 +1,8 @@
-export enum GameResultEnum {
-  OnGoing = 0,
-  LightWon = 1,
-  DarkWon = 2,
-  Stalemate = 3,
-  InsufficientMaterial = 4,
-  Repetition = 5,
-  Over50HalfMoves = 6,
-}
+export type GameResultEnum =
+  | "OnGoing"
+  | "LightWon"
+  | "DarkWon"
+  | "Stalemate"
+  | "InsufficientMaterial"
+  | "Repetition"
+  | "Over50HalfMoves";

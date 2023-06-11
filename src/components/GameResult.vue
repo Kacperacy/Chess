@@ -1,22 +1,20 @@
 <script setup lang="ts">
 import { useBoardStore } from "../stores/board";
 import { computed } from "vue";
-import { GameResultEnum } from "../models/gameResultEnum.model";
 
 const store = useBoardStore();
 
 let result = store.gameResult;
 
 let resultText = computed(() => {
-  if (result == GameResultEnum.DarkWon) return "Dark Won!!!";
-  else if (result == GameResultEnum.LightWon) return "Light Won!!!";
-  else if (result == GameResultEnum.InsufficientMaterial)
+  if (result == "DarkWon") return "Dark Won!!!";
+  else if (result == "LightWon") return "Light Won!!!";
+  else if (result == "InsufficientMaterial")
     return "Draw by insufficient material.";
-  else if (result == GameResultEnum.Over50HalfMoves)
-    return "Draw by over 50 half moves";
-  else if (result == GameResultEnum.Repetition)
+  else if (result == "Over50HalfMoves") return "Draw by over 50 half moves";
+  else if (result == "Repetition")
     return "Draw by triple repetition of same position";
-  else if (result == GameResultEnum.Stalemate) return "Draw by stalemate";
+  else if (result == "Stalemate") return "Draw by stalemate";
 });
 </script>
 

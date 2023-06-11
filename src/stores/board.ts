@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { Coordinates } from "../models/coordinates.model";
 import { Piece } from "../models/piece.model";
-import { Chess, Color, Move, PieceSymbol, Square } from "chess.js";
+import { Chess, Color, PieceSymbol, Square } from "chess.js";
 import { GameResultEnum } from "../models/gameResultEnum.model";
 import { Promotion } from "../models/promotion.model";
 
@@ -15,6 +15,19 @@ export type RootState = {
   promotion: Promotion;
 };
 
+// prettier-ignore
+// eslint-disable-next-line
+const coordinatesMove : Record<number, Square> = {
+  11: "a8", 21: "b8", 31: "c8", 41: "d8", 51: "e8", 61: "f8", 71: "g8", 81: "h8",
+  12: "a7", 22: "b7", 32: "c7", 42: "d7", 52: "e7", 62: "f7", 72: "g7", 82: "h7",
+  13: "a6", 23: "b6", 33: "c6", 43: "d6", 53: "e6", 63: "f6", 73: "g6", 83: "h6",
+  14: "a5", 24: "b5", 34: "c5", 44: "d5", 54: "e5", 64: "f5", 74: "g5", 84: "h5",
+  15: "a4", 25: "b4", 35: "c4", 45: "d4", 55: "e4", 65: "f4", 75: "g4", 85: "h4",
+  16: "a3", 26: "b3", 36: "c3", 46: "d3", 56: "e3", 66: "f3", 76: "g3", 86: "h3",
+  17: "a2", 27: "b2", 37: "c2", 47: "d2", 57: "e2", 67: "f2", 77: "g2", 87: "h2",
+  18: "a1", 28: "b1", 38: "c1", 48: "d1", 58: "e1", 68: "f1", 78: "g1", 88: "h1"
+}
+
 export const useBoardStore = defineStore("board", {
   state: () =>
     ({
@@ -23,7 +36,7 @@ export const useBoardStore = defineStore("board", {
       possibleMoves: [],
       chess: new Chess(),
       lastMove: [],
-      gameResult: GameResultEnum.OnGoing,
+      gameResult: "OnGoing",
       promotion: {
         isPromotion: false,
         color: null,
@@ -32,9 +45,28 @@ export const useBoardStore = defineStore("board", {
       },
     } as RootState),
   actions: {
+    clearHighlight() {
+      this.highlightList = [];
+    },
+    clearLastMove() {
+      this.lastMove = [];
+    },
+    clearPossibleMoves() {
+      this.possibleMoves = [];
+    },
+    clearSelectedPiece() {
+      this.selectedPiece = null;
+      this.clearPossibleMoves();
+    },
+    clearPromotion() {
+      this.promotion.isPromotion = false;
+      this.promotion.color = null;
+      this.promotion.column = null;
+      this.promotion.move = null;
+    },
     initBoard() {
       const fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-      this.gameResult = GameResultEnum.OnGoing;
+      this.gameResult = "OnGoing";
       this.clearLastMove();
       this.clearHighlight();
       this.clearPromotion();
@@ -53,16 +85,17 @@ export const useBoardStore = defineStore("board", {
       } else {
         this.highlightList.push({ x, y });
       }
+
       this.clearSelectedPiece();
     },
-    changeSelect(x: number, y: number) {
+    changeSelectedSquare(x: number, y: number) {
       this.clearHighlight();
       this.clearPromotion();
-
-      const move = this.translateCoordinates(x, y);
+      this.clearPossibleMoves();
 
       if (this.tryMove(x, y)) return;
 
+      const move = this.translateCoordinates(x, y);
       const piece = this.chess
         .board()
         .flat()
@@ -86,19 +119,6 @@ export const useBoardStore = defineStore("board", {
 
       this.updatePossibleMoves();
     },
-    clearHighlight() {
-      this.highlightList = [];
-    },
-    clearLastMove() {
-      this.lastMove = [];
-    },
-    clearPossibleMoves() {
-      this.possibleMoves = [];
-    },
-    clearSelectedPiece() {
-      this.selectedPiece = null;
-      this.clearPossibleMoves();
-    },
     updatePossibleMoves() {
       this.clearPossibleMoves();
 
@@ -107,43 +127,33 @@ export const useBoardStore = defineStore("board", {
       const square = this.translateCoordinates(
         this.selectedPiece.coordinates.x,
         this.selectedPiece.coordinates.y
-      ) as Square;
+      );
 
       const moves = this.chess.moves({ square: square });
 
+      if (moves.includes("O-O")) {
+        this.possibleMoves.push({ x: 7, y: 8 });
+        moves.splice(moves.indexOf("O-O"), 1);
+      }
+      if (moves.includes("O-O-O")) {
+        this.possibleMoves.push({ x: 3, y: 8 });
+        moves.splice(moves.indexOf("O-O-O"), 1);
+      }
+      if (moves.includes("o-o")) {
+        this.possibleMoves.push({ x: 3, y: 1 });
+        moves.splice(moves.indexOf("o-o"), 1);
+      }
+      if (moves.includes("o-o-o")) {
+        this.possibleMoves.push({ x: 7, y: 1 });
+        moves.splice(moves.indexOf("o-o-o"), 1);
+      }
+
       moves.forEach((move) => {
-        if (move == "O-O") {
-          this.possibleMoves.push({ x: 7, y: 8 });
-          return;
-        }
-        if (move == "O-O-O") {
-          this.possibleMoves.push({ x: 3, y: 8 });
-          return;
-        }
-        if (move == "o-o") {
-          this.possibleMoves.push({ x: 3, y: 1 });
-          return;
-        }
-        if (move == "o-o-o") {
-          this.possibleMoves.push({ x: 7, y: 1 });
-          return;
-        }
         this.possibleMoves.push(this.translateMove(move));
       });
     },
     translateCoordinates(x: number, y: number) {
-      let xValue = "";
-
-      if (x == 1) xValue = "a";
-      if (x == 2) xValue = "b";
-      if (x == 3) xValue = "c";
-      if (x == 4) xValue = "d";
-      if (x == 5) xValue = "e";
-      if (x == 6) xValue = "f";
-      if (x == 7) xValue = "g";
-      if (x == 8) xValue = "h";
-
-      return xValue + (9 - y);
+      return coordinatesMove[Number(x + "" + y)];
     },
     translateMove(move: string) {
       move = move.replace(/#|\+|=B|=N|=R|=Q/g, "");
@@ -153,13 +163,13 @@ export const useBoardStore = defineStore("board", {
       const coordinates = { y: 9 - Number(moveSign[1]) } as Coordinates;
 
       if (x == "a") coordinates.x = 1;
-      if (x == "b") coordinates.x = 2;
-      if (x == "c") coordinates.x = 3;
-      if (x == "d") coordinates.x = 4;
-      if (x == "e") coordinates.x = 5;
-      if (x == "f") coordinates.x = 6;
-      if (x == "g") coordinates.x = 7;
-      if (x == "h") coordinates.x = 8;
+      else if (x == "b") coordinates.x = 2;
+      else if (x == "c") coordinates.x = 3;
+      else if (x == "d") coordinates.x = 4;
+      else if (x == "e") coordinates.x = 5;
+      else if (x == "f") coordinates.x = 6;
+      else if (x == "g") coordinates.x = 7;
+      else if (x == "h") coordinates.x = 8;
 
       return coordinates;
     },
@@ -172,31 +182,30 @@ export const useBoardStore = defineStore("board", {
       );
       const to = this.translateCoordinates(x, y);
 
-      const moves = this.chess.moves({ square: from as Square, verbose: true });
+      const moves = this.chess.moves({ square: from, verbose: true });
       const move = moves.find((obj) => obj.to == to);
 
-      if (move != null) {
-        if (move.san.includes("=")) {
-          this.promotion.isPromotion = true;
-          this.promotion.color = this.chess.turn();
-          this.promotion.column = x;
-          this.promotion.move = move;
-          return true;
-        }
-        this.chess.move({ from, to });
-        this.highlightLastMove(
-          this.translateMove(move["from"]),
-          this.translateMove(move["to"])
-        );
+      if (move == null) return false;
 
-        this.movePiece();
+      if (move.san.includes("=")) {
+        this.promotion.isPromotion = true;
+        this.promotion.color = this.chess.turn();
+        this.promotion.column = x;
+        this.promotion.move = move;
         return true;
       }
-      return false;
-    },
-    movePiece() {
+
+      this.chess.move({ from, to });
+      this.highlightLastMove(
+        this.translateMove(move["from"]),
+        this.translateMove(move["to"])
+      );
       this.clearSelectedPiece();
-      this.checkGameResult();
+
+      this.moveEnemyPiece();
+      return true;
+    },
+    moveEnemyPiece() {
       if (!this.isGameOnGoing()) return;
 
       const moves = this.chess.moves({ verbose: true });
@@ -211,7 +220,6 @@ export const useBoardStore = defineStore("board", {
           this.translateMove(move["to"])
         );
 
-      this.checkGameResult();
       if (!this.isGameOnGoing()) return;
     },
     highlightLastMove(from: Coordinates, to: Coordinates) {
@@ -222,30 +230,29 @@ export const useBoardStore = defineStore("board", {
       if (this.chess.isCheckmate()) {
         const turn = this.chess.turn();
         if (turn == "w") {
-          this.gameResult = GameResultEnum.DarkWon;
+          this.gameResult = "DarkWon";
         } else if (turn == "b") {
-          this.gameResult = GameResultEnum.LightWon;
+          this.gameResult = "LightWon";
         }
       } else if (this.chess.isInsufficientMaterial()) {
-        this.gameResult = GameResultEnum.InsufficientMaterial;
+        this.gameResult = "InsufficientMaterial";
       } else if (this.chess.isStalemate()) {
-        this.gameResult = GameResultEnum.Stalemate;
+        this.gameResult = "Stalemate";
       } else if (this.chess.isThreefoldRepetition()) {
-        this.gameResult = GameResultEnum.Repetition;
+        this.gameResult = "Repetition";
+      } else if (this.halfMoves >= 100) {
+        this.gameResult = "Over50HalfMoves";
       }
-      // else if (this.gameState.halfMovesCount >= 100) {
-      //   this.gameResult = GameResultEnum.Over50HalfMoves;
-      // }
     },
     isGameOnGoing() {
-      return this.gameResult == GameResultEnum.OnGoing;
+      this.checkGameResult();
+      return this.gameResult == "OnGoing";
     },
     isPromotion() {
       return this.promotion.isPromotion;
     },
     promote(piece: string) {
       if (this.promotion.move == null) return;
-      console.log("x");
 
       const from = this.promotion.move["from"];
       const to = this.promotion.move["to"];
@@ -258,13 +265,7 @@ export const useBoardStore = defineStore("board", {
       );
 
       this.clearPromotion();
-      this.movePiece();
-    },
-    clearPromotion() {
-      this.promotion.isPromotion = false;
-      this.promotion.color = null;
-      this.promotion.column = null;
-      this.promotion.move = null;
+      this.moveEnemyPiece();
     },
     getBoard() {
       return this.chess
@@ -281,6 +282,11 @@ export const useBoardStore = defineStore("board", {
             type: obj.type,
           };
         });
+    },
+  },
+  getters: {
+    halfMoves(): number {
+      return Number(this.chess.fen().split(" ").at(-2));
     },
   },
 });
