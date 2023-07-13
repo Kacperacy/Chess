@@ -13,6 +13,14 @@ To run application you must clone repo and use this commands:
 1. `npm install`
 2. `npm run dev`
 
+## Technologies
+
+- Vue
+- Typescript
+- TailwindCSS
+- .NET 7 (planned to move to version 8 on release)
+- PostgreSQL
+
 ## Plans
 1. [x] Playable chess game on front-end side
    1. [x] Board
@@ -43,11 +51,3 @@ To run application you must clone repo and use this commands:
 5. [ ] Possibility to play against chess engine
 6. [ ] Ranking system
 7. [ ] User game history
-
-## Technologies
-
-- Vue
-- Typescript
-- TailwindCSS
-- .NET 7 (planned to move to version 8 on release)
-- PostgreSQL
