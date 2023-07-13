@@ -1,4 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useBoardStore } from "../stores/board";
+
+const store = useBoardStore();
+</script>
 
 <template>
   <div class="w-full h-full flex flex-wrap">

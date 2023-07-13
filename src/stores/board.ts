@@ -4,15 +4,17 @@ import { Piece } from "../models/piece.model";
 import { Chess, Color, PieceSymbol, Square } from "chess.js";
 import { GameResultEnum } from "../models/gameResultEnum.model";
 import { Promotion } from "../models/promotion.model";
+import { PossibleMove } from "../models/possibleMove.model";
 
 export type RootState = {
   highlightList: Coordinates[];
   lastMove: Coordinates[];
   selectedPiece: Piece | null;
-  possibleMoves: Coordinates[];
+  possibleMoves: PossibleMove[];
   chess: Chess;
   gameResult: GameResultEnum;
   promotion: Promotion;
+  orientation: Color;
 };
 
 // prettier-ignore
@@ -43,6 +45,7 @@ export const useBoardStore = defineStore("board", {
         column: null,
         move: null,
       },
+      orientation: "w",
     } as RootState),
   actions: {
     clearHighlight() {
@@ -91,9 +94,10 @@ export const useBoardStore = defineStore("board", {
     changeSelectedSquare(x: number, y: number) {
       this.clearHighlight();
       this.clearPromotion();
-      this.clearPossibleMoves();
 
       if (this.tryMove(x, y)) return;
+
+      this.clearPossibleMoves();
 
       const move = this.translateCoordinates(x, y);
       const piece = this.chess
@@ -132,24 +136,41 @@ export const useBoardStore = defineStore("board", {
       const moves = this.chess.moves({ square: square });
 
       if (moves.includes("O-O")) {
-        this.possibleMoves.push({ x: 7, y: 8 });
+        this.possibleMoves.push({
+          coordinates: { x: 7, y: 8 },
+          type: "possible",
+        });
         moves.splice(moves.indexOf("O-O"), 1);
       }
       if (moves.includes("O-O-O")) {
-        this.possibleMoves.push({ x: 3, y: 8 });
+        this.possibleMoves.push({
+          coordinates: { x: 3, y: 8 },
+          type: "possible",
+        });
         moves.splice(moves.indexOf("O-O-O"), 1);
       }
       if (moves.includes("o-o")) {
-        this.possibleMoves.push({ x: 3, y: 1 });
+        this.possibleMoves.push({
+          coordinates: { x: 3, y: 1 },
+          type: "possible",
+        });
         moves.splice(moves.indexOf("o-o"), 1);
       }
       if (moves.includes("o-o-o")) {
-        this.possibleMoves.push({ x: 7, y: 1 });
+        this.possibleMoves.push({
+          coordinates: { x: 7, y: 1 },
+          type: "possible",
+        });
         moves.splice(moves.indexOf("o-o-o"), 1);
       }
 
       moves.forEach((move) => {
-        this.possibleMoves.push(this.translateMove(move));
+        const coordinates = this.translateMove(move);
+        if (move.includes("x")) {
+          this.possibleMoves.push({ coordinates, type: "capture" });
+        } else {
+          this.possibleMoves.push({ coordinates, type: "possible" });
+        }
       });
     },
     translateCoordinates(x: number, y: number) {
@@ -174,7 +195,15 @@ export const useBoardStore = defineStore("board", {
       return coordinates;
     },
     tryMove(x: number, y: number) {
+      console.log(1);
+
       if (this.selectedPiece == null) return false;
+      if (
+        !this.possibleMoves.find(
+          (obj) => obj.coordinates.x == x && obj.coordinates.y == y
+        )
+      )
+        return false;
 
       const from = this.translateCoordinates(
         this.selectedPiece.coordinates.x,
