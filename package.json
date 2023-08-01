@@ -12,7 +12,8 @@
     "chess.js": "^1.0.0-beta.6",
     "pinia": "^2.0.33",
     "vue": "^3.2.47",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.1.6",
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.1.0",

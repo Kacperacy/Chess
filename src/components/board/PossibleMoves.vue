@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useBoardStore } from "../stores/board";
+import { useBoardStore } from "../../stores/board";
 
 const store = useBoardStore();
 
@@ -9,7 +9,7 @@ const { possibleMoves } = storeToRefs(store);
 <template>
   <div
     v-for="possibleMove in possibleMoves"
-    class="absolute top-0 left-0 w-[12.5%] h-[12.5%] grid place-items-center"
+    class="absolute top-0 left-0 w-[12.5%] h-[12.5%] grid place-items-center cursor-pointer"
     :class="[
       'translate-x-[' + (possibleMove.coordinates.x - 1) * 100 + '%]',
       'translate-y-[' + (possibleMove.coordinates.y - 1) * 100 + '%]',

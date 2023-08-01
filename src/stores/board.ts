@@ -195,8 +195,6 @@ export const useBoardStore = defineStore("board", {
       return coordinates;
     },
     tryMove(x: number, y: number) {
-      console.log(1);
-
       if (this.selectedPiece == null) return false;
       if (
         !this.possibleMoves.find(

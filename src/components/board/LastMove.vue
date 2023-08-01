@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useBoardStore } from "../stores/board";
+import { useBoardStore } from "../../stores/board";
 
 const store = useBoardStore();
 
