@@ -6,7 +6,7 @@ const store = useBoardStore();
 
 <template>
   <button
-    class="w-full h-full rounded-lg bg-[#154c79] hover:bg-[#063970] text-[color:white]"
+    class="rounded-lg bg-[#154c79] hover:bg-[#063970] text-[color:white]"
     @click="store.undoMove"
   >
     Undo move
