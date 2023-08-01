@@ -310,6 +310,12 @@ export const useBoardStore = defineStore("board", {
           };
         });
     },
+    undoMove() {
+      this.clearSelectedPiece();
+      this.clearLastMove();
+      this.chess.undo();
+      this.chess.undo();
+    },
   },
   getters: {
     halfMoves(): number {

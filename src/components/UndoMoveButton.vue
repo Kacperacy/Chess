@@ -7,8 +7,8 @@ const store = useBoardStore();
 <template>
   <button
     class="w-full h-full rounded-lg bg-[#154c79] hover:bg-[#063970] text-[color:white]"
-    @click="store.initBoard"
+    @click="store.undoMove"
   >
-    Restart game
+    Undo move
   </button>
 </template>
