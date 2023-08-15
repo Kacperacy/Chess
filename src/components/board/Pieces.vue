@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useBoardStore } from "../../stores/board";
+import { useBoardStore } from "@/stores/board";
 import Piece from "./Piece.vue";
 import { ref, watch } from "vue";
 import draggable from "vuedraggable";

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useBoardStore } from "../../stores/board";
+import { useBoardStore } from "@/stores/board";
 
 const store = useBoardStore();
 

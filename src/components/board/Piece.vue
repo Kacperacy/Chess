@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Piece } from "../../models/piece.model";
+import { Piece } from "@/models/piece.model";
 import { computed, getCurrentInstance, ref, watch } from "vue";
 
 const props = defineProps<{ piece: Piece }>();

@@ -9,8 +9,7 @@ import PossibleMoves from "../components/board/PossibleMoves.vue";
 import LastMove from "../components/board/LastMove.vue";
 import PawnPromotion from "../components/board/PawnPromotion.vue";
 import GameResult from "../components/GameResult.vue";
-import RestartButton from "../components/RestartButton.vue";
-import UndoMoveButton from "../components/UndoMoveButton.vue";
+import GameControls from "../components/gameControls/GameControls.vue";
 
 const store = useBoardStore();
 const { changeHighlight, changeSelectedSquare, initBoard } = store;
@@ -48,10 +47,10 @@ function select(e: MouseEvent) {
 </script>
 
 <template>
-  <div class="flex flex-row items-center justify-center w-full pt-[5vh]">
+  <div class="flex flex-row items-center justify-center w-full">
     <div
       ref="board"
-      class="relative aspect-square w-[90vh]"
+      class="relative aspect-square w-[90vh] m-5"
       @click="select"
       @contextmenu="highlight"
     >
@@ -63,12 +62,7 @@ function select(e: MouseEvent) {
       <PossibleMoves />
       <PawnPromotion v-if="store.isPromotion()" />
     </div>
-    <div
-      class="ml-10 flex flex-col gap-[10%] items-center justify-center right-[10vw] w-1/12 h-full"
-    >
-      <RestartButton class="w-full h-1/5" />
-      <UndoMoveButton class="w-full h-1/5" />
-    </div>
+    <GameControls class="ml-05 right-[10vw] w-1/12 h-full m-5" />
     <GameResult v-if="store.gameResult != 'OnGoing'" />
   </div>
   <a
