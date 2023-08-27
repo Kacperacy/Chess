@@ -1,5 +1,5 @@
 <template>
-  <div class="w-screen h-screen bg-[#e28743] flex flex-col items-center">
+  <div class="w-screen h-screen bg-main-background flex flex-col items-center">
     <RouterView />
   </div>
 </template>

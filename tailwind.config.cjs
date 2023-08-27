@@ -2,7 +2,16 @@
 module.exports = {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
-    colors: { "square-light": "#ccb7ae", "square-dark": "#706677" },
+    colors: {
+      "square-light": "#D7CEB2",
+      "square-dark": "#66635B",
+      "main-background": "#93A8AC",
+      "button-background": "#4C5760",
+      "button-background-hover": "#505b64",
+      "result-background": "#A59E8C",
+      "result-border": "#827873",
+      "game-controls-background": "#7e7f92",
+    },
     extend: {},
   },
   plugins: [],

@@ -50,7 +50,7 @@ function select(e: MouseEvent) {
   <div class="flex flex-row items-center justify-center w-full">
     <div
       ref="board"
-      class="relative aspect-square w-[90vh] m-5"
+      class="relative aspect-square w-[90vh] m-5 border-2"
       @click="select"
       @contextmenu="highlight"
     >
@@ -62,7 +62,7 @@ function select(e: MouseEvent) {
       <PossibleMoves />
       <PawnPromotion v-if="store.isPromotion()" />
     </div>
-    <GameControls class="ml-05 right-[10vw] w-1/12 h-full m-5" />
+    <GameControls class="ml-1 rounded-lg w-1/12 h-2/3 m-5" />
     <GameResult v-if="store.gameResult != 'OnGoing'" />
   </div>
   <a
