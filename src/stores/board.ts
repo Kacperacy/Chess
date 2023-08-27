@@ -15,11 +15,13 @@ export type RootState = {
   gameResult: GameResultEnum;
   promotion: Promotion;
   orientation: Color;
+  sideToMove: Color;
+  isBoardFlipped: boolean;
 };
 
 // prettier-ignore
 // eslint-disable-next-line
-const coordinatesMove : Record<number, Square> = {
+const coordinatesMove: Record<number, Square> = {
   11: "a8", 21: "b8", 31: "c8", 41: "d8", 51: "e8", 61: "f8", 71: "g8", 81: "h8",
   12: "a7", 22: "b7", 32: "c7", 42: "d7", 52: "e7", 62: "f7", 72: "g7", 82: "h7",
   13: "a6", 23: "b6", 33: "c6", 43: "d6", 53: "e6", 63: "f6", 73: "g6", 83: "h6",
@@ -46,6 +48,8 @@ export const useBoardStore = defineStore("board", {
         move: null,
       },
       orientation: "w",
+      sideToMove: "w",
+      isBoardFlipped: false,
     } as RootState),
   actions: {
     clearHighlight() {
@@ -76,6 +80,7 @@ export const useBoardStore = defineStore("board", {
       this.clearSelectedPiece();
       this.chess.clear();
       this.chess.load(fen);
+      this.sideToMove = this.chess.turn();
     },
     changeHighlight(x: number, y: number) {
       const highlight = this.highlightList.find(
@@ -107,7 +112,7 @@ export const useBoardStore = defineStore("board", {
 
       if (
         piece != null &&
-        piece.color == "w" &&
+        piece.color == this.sideToMove &&
         !(
           this.selectedPiece != null &&
           this.selectedPiece.coordinates.x == x &&
@@ -174,7 +179,9 @@ export const useBoardStore = defineStore("board", {
       });
     },
     translateCoordinates(x: number, y: number) {
-      return coordinatesMove[Number(x + "" + y)];
+      return this.isBoardFlipped
+        ? coordinatesMove[Number(9 - x + "" + (9 - y))]
+        : coordinatesMove[Number(x + "" + y)];
     },
     translateMove(move: string) {
       move = move.replace(/#|\+|=B|=N|=R|=Q/g, "");
@@ -191,6 +198,11 @@ export const useBoardStore = defineStore("board", {
       else if (x == "f") coordinates.x = 6;
       else if (x == "g") coordinates.x = 7;
       else if (x == "h") coordinates.x = 8;
+
+      if (this.isBoardFlipped) {
+        coordinates.x = 9 - coordinates.x;
+        coordinates.y = 9 - coordinates.y;
+      }
 
       return coordinates;
     },
@@ -315,6 +327,17 @@ export const useBoardStore = defineStore("board", {
       this.clearLastMove();
       this.chess.undo();
       this.chess.undo();
+    },
+    flipBoard() {
+      this.isBoardFlipped = !this.isBoardFlipped;
+      this.lastMove.forEach((obj) => {
+        obj.x = 9 - obj.x;
+        obj.y = 9 - obj.y;
+      });
+      this.highlightList.forEach((obj) => {
+        obj.x = 9 - obj.x;
+        obj.y = 9 - obj.y;
+      });
     },
   },
   getters: {

@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { Piece } from "@/models/piece.model";
-import { computed, getCurrentInstance, ref, watch } from "vue";
+import { computed } from "vue";
+import { storeToRefs } from "pinia";
+import { useBoardStore } from "@/stores/board";
+
+const store = useBoardStore();
+
+const { isBoardFlipped } = storeToRefs(store);
 
 const props = defineProps<{ piece: Piece }>();
 
@@ -25,7 +31,7 @@ const pieceClass = computed(() => {
     class="absolute top-0 left-0 w-[12.5%] h-[12.5%]"
     :class="[
       'translate-x-[' + (piece.coordinates.x - 1) * 100 + '%]',
-      'translate-y-[' + (piece.coordinates.y - 1) * 100 + '%] ',
+      'translate-y-[' + (piece.coordinates.y - 1) * 100 + '%]',
       pieceClass,
     ]"
   ></div>
