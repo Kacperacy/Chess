@@ -1,7 +1,4 @@
-<script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { useBoardStore } from "@/stores/board";
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="w-full h-full flex flex-wrap">

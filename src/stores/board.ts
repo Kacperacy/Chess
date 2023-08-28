@@ -96,7 +96,7 @@ export const useBoardStore = defineStore("board", {
 
       this.clearSelectedPiece();
     },
-    changeSelectedSquare(x: number, y: number) {
+    changeSelectedSquare(x: number, y: number, isDragged: boolean) {
       this.clearHighlight();
       this.clearPromotion();
 
@@ -124,7 +124,7 @@ export const useBoardStore = defineStore("board", {
           type: piece.type,
           coordinates: this.translateMove(piece.square),
         };
-      } else this.clearSelectedPiece();
+      } else if (!isDragged) this.clearSelectedPiece();
 
       this.updatePossibleMoves();
     },
@@ -338,6 +338,17 @@ export const useBoardStore = defineStore("board", {
         obj.x = 9 - obj.x;
         obj.y = 9 - obj.y;
       });
+      if (this.selectedPiece != null)
+        this.selectedPiece.coordinates = {
+          x: 9 - this.selectedPiece.coordinates.x,
+          y: 9 - this.selectedPiece.coordinates.y,
+        };
+      this.possibleMoves.forEach((obj) => {
+        obj.coordinates.x = 9 - obj.coordinates.x;
+        obj.coordinates.y = 9 - obj.coordinates.y;
+      });
+      if (this.promotion.isPromotion && this.promotion.column != null)
+        this.promotion.column = 9 - this.promotion.column;
     },
   },
   getters: {

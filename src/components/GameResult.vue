@@ -20,7 +20,7 @@ let resultText = computed(() => {
 
 <template>
   <div
-    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-result-background rounded-lg h-1/3 w-[350px] text-center flex items-center flex-col border-8 border-result-border"
+    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-result-background rounded-lg h-1/3 w-[350px] text-center flex items-center flex-col border-8 border-result-border z-50"
   >
     <span class="text-3xl h-1/3 pt-[10%]">Game Over</span>
     <div class="h-1/3 text-center">{{ resultText }}</div>
