@@ -37,13 +37,6 @@ function highlight(e: MouseEvent) {
   if (clickedPos == null) return;
   changeHighlight(clickedPos.x, clickedPos.y);
 }
-
-function select(e: MouseEvent) {
-  e.preventDefault();
-  const clickedPos = getPositionClicked(e);
-  if (clickedPos == null) return;
-  changeSelectedSquare(clickedPos.x, clickedPos.y);
-}
 </script>
 
 <template>
@@ -51,7 +44,6 @@ function select(e: MouseEvent) {
     <div
       ref="board"
       class="relative aspect-square w-[90vh] m-5 border-2"
-      @click="select"
       @contextmenu="highlight"
     >
       <Board />
