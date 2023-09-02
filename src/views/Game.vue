@@ -38,10 +38,11 @@ function highlight(e: MouseEvent) {
   changeHighlight(clickedPos.x, clickedPos.y);
 }
 
-function clearHighlight(e: MouseEvent) {
+function tryMove(e: MouseEvent) {
   e.preventDefault();
-  store.clearSelectedPiece();
-  store.clearHighlight();
+  const clickedPos = getPositionClicked(e);
+  if (clickedPos == null) return;
+  store.tryMove(clickedPos.x, clickedPos.y);
 }
 </script>
 
@@ -51,8 +52,9 @@ function clearHighlight(e: MouseEvent) {
       ref="board"
       class="relative aspect-square w-[90vh] m-5 border-2"
       @contextmenu="highlight"
+      @click="tryMove"
     >
-      <Board class="shadow-xl" @click="clearHighlight" />
+      <Board class="shadow-xl" />
       <LastMove />
       <Highlights />
       <SelectedSquare />
