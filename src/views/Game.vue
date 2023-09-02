@@ -37,6 +37,12 @@ function highlight(e: MouseEvent) {
   if (clickedPos == null) return;
   changeHighlight(clickedPos.x, clickedPos.y);
 }
+
+function clearHighlight(e: MouseEvent) {
+  e.preventDefault();
+  store.clearSelectedPiece();
+  store.clearHighlight();
+}
 </script>
 
 <template>
@@ -46,7 +52,7 @@ function highlight(e: MouseEvent) {
       class="relative aspect-square w-[90vh] m-5 border-2"
       @contextmenu="highlight"
     >
-      <Board class="shadow-xl" @click="store.clearSelectedPiece" />
+      <Board class="shadow-xl" @click="clearHighlight" />
       <LastMove />
       <Highlights />
       <SelectedSquare />
