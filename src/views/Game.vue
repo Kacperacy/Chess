@@ -46,7 +46,7 @@ function highlight(e: MouseEvent) {
       class="relative aspect-square w-[90vh] m-5 border-2"
       @contextmenu="highlight"
     >
-      <Board class="shadow-xl" />
+      <Board class="shadow-xl" @click="store.clearSelectedPiece" />
       <LastMove />
       <Highlights />
       <SelectedSquare />
@@ -59,7 +59,7 @@ function highlight(e: MouseEvent) {
   </div>
   <a
     href="https://github.com/Kacperacy/Chess"
-    class="text-5xl mb-5 mt-5 transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 hover:text-[color:#333]"
+    class="text-3xl mb-5 mt-2 transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 hover:text-[color:#333]"
     ><font-awesome-icon :icon="['fab', 'github']" />REPO</a
   >
 </template>

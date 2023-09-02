@@ -96,7 +96,7 @@ export const useBoardStore = defineStore("board", {
 
       this.clearSelectedPiece();
     },
-    changeSelectedSquare(x: number, y: number) {
+    changeSelectedSquare(x: number, y: number, isDragged: boolean = false) {
       this.clearHighlight();
       this.clearPromotion();
 
@@ -124,7 +124,7 @@ export const useBoardStore = defineStore("board", {
           type: piece.type,
           coordinates: this.translateMove(piece.square),
         };
-      } else this.clearSelectedPiece();
+      } else if (!isDragged) this.clearSelectedPiece();
 
       this.updatePossibleMoves();
     },

@@ -30,6 +30,7 @@ function getPositionClicked(e: MouseEvent) {
 
 function drag(e: MouseEvent, piece: PieceModel) {
   e.preventDefault();
+  if (e.button != 0) return;
   draggedPiece.value = piece;
   draggedElement.value = e.target as HTMLElement;
 
@@ -38,7 +39,7 @@ function drag(e: MouseEvent, piece: PieceModel) {
   props.board.addEventListener("mousemove", move);
   props.board.addEventListener("mouseup", drop);
 
-  store.changeSelectedSquare(piece.coordinates.x, piece.coordinates.y);
+  store.changeSelectedSquare(piece.coordinates.x, piece.coordinates.y, true);
 }
 
 function move(e: MouseEvent) {
@@ -57,6 +58,8 @@ function move(e: MouseEvent) {
     e.clientX - board.left - draggedElement.value.offsetWidth / 2 + "px";
   draggedElement.value.style.top =
     e.clientY - board.top - draggedElement.value.offsetHeight / 2 + "px";
+
+  draggedElement.value.style.zIndex = "50";
 
   draggedElement.value.style.transform = "translateX(0) translateY(0)";
 }
@@ -77,6 +80,7 @@ function drop(e: MouseEvent) {
   draggedElement.value.style.left = "0";
   draggedElement.value.style.top = "0";
   draggedElement.value.style.transform = "";
+  draggedElement.value.style.zIndex = "20";
 
   draggedElement.value = null;
   draggedPiece.value = null;
