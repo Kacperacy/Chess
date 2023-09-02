@@ -9,7 +9,7 @@ const store = useBoardStore();
     class="rounded-lg bg-button-background hover:bg-button-background-hover text-[color:white]"
     @click="store.undoMove"
   >
-    <i class="fa-solid fa-arrow-left"></i><br />
+    <font-awesome-icon :icon="['fas', 'arrow-left']" /><br />
     Undo move
   </button>
 </template>

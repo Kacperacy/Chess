@@ -9,7 +9,7 @@ const store = useBoardStore();
     class="rounded-lg bg-button-background hover:bg-button-background-hover text-[color:white]"
     @click="store.initBoard"
   >
-    <i class="fa-solid fa-arrow-rotate-left"></i><br />
+    <font-awesome-icon :icon="['fas', 'arrow-rotate-left']" /><br />
     Restart game
   </button>
 </template>

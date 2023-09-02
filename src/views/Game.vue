@@ -13,7 +13,7 @@ import GameControls from "../components/gameControls/GameControls.vue";
 
 const store = useBoardStore();
 const { changeHighlight, changeSelectedSquare, initBoard } = store;
-const board = ref(null as unknown as HTMLElement);
+const board = ref<HTMLElement | null>(null);
 
 initBoard();
 
@@ -46,20 +46,20 @@ function highlight(e: MouseEvent) {
       class="relative aspect-square w-[90vh] m-5 border-2"
       @contextmenu="highlight"
     >
-      <Board />
+      <Board class="shadow-xl" />
       <LastMove />
       <Highlights />
       <SelectedSquare />
-      <Pieces />
+      <Pieces :board="board" :key="key" />
       <PossibleMoves />
       <PawnPromotion v-if="store.isPromotion()" />
     </div>
-    <GameControls class="ml-1 rounded-lg w-1/12 h-2/3 m-5" />
+    <GameControls class="ml-1 rounded-lg w-1/12 h-2/3 m-5 shadow-xl" />
     <GameResult v-if="store.gameResult != 'OnGoing'" />
   </div>
   <a
     href="https://github.com/Kacperacy/Chess"
-    class="fa fa-github text-2xl mb-5 mt-5 transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 hover:text-[color:#333]"
-    >Repository</a
+    class="text-5xl mb-5 mt-5 transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 hover:text-[color:#333]"
+    ><font-awesome-icon :icon="['fab', 'github']" />REPO</a
   >
 </template>
