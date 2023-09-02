@@ -9,7 +9,7 @@ const store = useBoardStore();
     class="rounded-lg bg-button-background hover:bg-button-background-hover text-[color:white]"
     @click="store.flipBoard"
   >
-    <i class="fa-solid fa-repeat"></i><br />
+    <font-awesome-icon :icon="['fas', 'repeat']" /><br />
     Flip board
   </button>
 </template>
