@@ -50,7 +50,7 @@ function highlight(e: MouseEvent) {
       <LastMove />
       <Highlights />
       <SelectedSquare />
-      <Pieces :board="board" :key="key" />
+      <Pieces :board="board" />
       <PossibleMoves />
       <PawnPromotion v-if="store.isPromotion()" />
     </div>
