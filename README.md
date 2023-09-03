@@ -22,19 +22,19 @@ To run application you must clone repo and use this commands:
 - PostgreSQL
 
 ## Plans
-1. [x] Playable chess game on front-end side
+1. [ ] Playable chess game on front-end side
    1. [x] Board
    2. [x] Pieces
    3. [x] Pieces movement
    4. [x] Move validation
    5. [x] Game result
    6. [x] Position loading from FEN
-   7. [ ] Board rotation
+   7. [x] Board rotation
    8. [x] Pawn promotion
    9. [x] Selecting only own color (opponent will make random moves)
    10. [x] Possible moves validation
    11. [ ] Game time control
-   12. [ ] Drag&Drop pieces
+   12. [x] Drag&Drop pieces
 2. [ ] Front-end background
    1. [ ] Application background
    2. [ ] Background image/color
