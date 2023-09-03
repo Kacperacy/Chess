@@ -17,6 +17,7 @@ export type RootState = {
   orientation: Color;
   sideToMove: Color;
   isBoardFlipped: boolean;
+  isDragged: boolean;
 };
 
 // prettier-ignore
@@ -50,6 +51,7 @@ export const useBoardStore = defineStore("board", {
       orientation: "w",
       sideToMove: "w",
       isBoardFlipped: false,
+      isDragged: false,
     } as RootState),
   actions: {
     clearHighlight() {

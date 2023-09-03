@@ -6,8 +6,9 @@ import { ref } from "vue";
 
 const store = useBoardStore();
 const props = defineProps<{ board: HTMLElement | null }>();
+
 const draggedElement = ref<HTMLElement | null>(null);
-const draggedPiece = ref<PieceModel | null>(null);
+const draggedIndex = ref<Number | null>(null);
 const moveSkip = ref(false);
 
 function isDraggable(piece: PieceModel) {
@@ -28,18 +29,22 @@ function getPositionClicked(e: MouseEvent) {
   return { x, y };
 }
 
-function drag(e: MouseEvent, piece: PieceModel) {
+function drag(e: MouseEvent, index: number, isDraggable: boolean) {
   e.preventDefault();
   if (e.button != 0) return;
-  draggedPiece.value = piece;
-  draggedElement.value = e.target as HTMLElement;
-
+  if (!isDraggable) return;
   if (props.board == null) return;
+
+  const clickedPos = getPositionClicked(e);
+  if (clickedPos == null) return;
+
+  store.isDragged = true;
+  draggedElement.value = e.target as HTMLElement;
+  draggedIndex.value = index;
 
   props.board.addEventListener("mousemove", move);
   props.board.addEventListener("mouseup", drop);
-
-  store.changeSelectedSquare(piece.coordinates.x, piece.coordinates.y, true);
+  store.changeSelectedSquare(clickedPos.x, clickedPos.y, true);
 }
 
 function move(e: MouseEvent) {
@@ -49,25 +54,25 @@ function move(e: MouseEvent) {
   }
   e.preventDefault();
   if (props.board == null) return;
-  if (draggedPiece.value == null) return;
   if (draggedElement.value == null) return;
 
   var board = props.board.getBoundingClientRect();
 
-  draggedElement.value.style.left =
-    e.clientX - board.left - draggedElement.value.offsetWidth / 2 + "px";
-  draggedElement.value.style.top =
-    e.clientY - board.top - draggedElement.value.offsetHeight / 2 + "px";
-
-  draggedElement.value.style.zIndex = "50";
-
-  draggedElement.value.style.transform = "translateX(0) translateY(0)";
+  if (
+    e.clientX > board.left &&
+    e.clientX < board.right &&
+    e.clientY > board.top &&
+    e.clientY < board.bottom
+  ) {
+    draggedElement.value.style.transform = `translate(${
+      e.clientX - board.left - 75 + window.scrollX + "px" // 50 is half of the piece size (100px)
+    }, ${e.clientY - board.top - 75 + window.scrollY + "px"})`;
+  }
 }
 
 function drop(e: MouseEvent) {
   e.preventDefault();
   if (props.board == null) return;
-  if (draggedPiece.value == null) return;
   if (draggedElement.value == null) return;
 
   props.board.removeEventListener("mousemove", move);
@@ -77,13 +82,11 @@ function drop(e: MouseEvent) {
   if (clickedPos == null) return;
   store.tryMove(clickedPos.x, clickedPos.y);
 
-  draggedElement.value.style.left = "0";
-  draggedElement.value.style.top = "0";
   draggedElement.value.style.transform = "";
-  draggedElement.value.style.zIndex = "20";
 
+  store.isDragged = false;
+  draggedIndex.value = null;
   draggedElement.value = null;
-  draggedPiece.value = null;
 }
 </script>
 
@@ -92,10 +95,14 @@ function drop(e: MouseEvent) {
     v-for="(piece, index) in store.getBoard()"
     :key="index"
     :piece="piece"
-    class="ghost-class"
-    :class="{
-      'cursor-grab': isDraggable(piece),
-    }"
-    @mousedown="drag($event, piece)"
+    class=""
+    :class="[
+      {
+        'cursor-grab': isDraggable(piece),
+        'z-50 pointer-events-none':
+          store.isDragged && draggedIndex && index == draggedIndex,
+      },
+    ]"
+    @mousedown="drag($event, index, isDraggable(piece))"
   />
 </template>

@@ -1,12 +1,6 @@
 <script setup lang="ts">
 import { Piece } from "@/models/piece.model";
 import { computed } from "vue";
-import { storeToRefs } from "pinia";
-import { useBoardStore } from "@/stores/board";
-
-const store = useBoardStore();
-
-const { isBoardFlipped } = storeToRefs(store);
 
 const props = defineProps<{ piece: Piece }>();
 

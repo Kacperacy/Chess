@@ -10,9 +10,11 @@ import LastMove from "../components/board/LastMove.vue";
 import PawnPromotion from "../components/board/PawnPromotion.vue";
 import GameResult from "../components/GameResult.vue";
 import GameControls from "../components/gameControls/GameControls.vue";
+import { storeToRefs } from "pinia";
 
 const store = useBoardStore();
 const { changeHighlight, changeSelectedSquare, initBoard } = store;
+const { isDragged } = storeToRefs(store);
 const board = ref<HTMLElement | null>(null);
 
 initBoard();
@@ -42,7 +44,7 @@ function tryMove(e: MouseEvent) {
   e.preventDefault();
   const clickedPos = getPositionClicked(e);
   if (clickedPos == null) return;
-  store.tryMove(clickedPos.x, clickedPos.y);
+  changeSelectedSquare(clickedPos.x, clickedPos.y);
 }
 </script>
 
@@ -50,11 +52,14 @@ function tryMove(e: MouseEvent) {
   <div class="flex flex-row items-center justify-center w-full">
     <div
       ref="board"
-      class="relative aspect-square w-[90vh] m-5 border-2"
+      class="relative aspect-square w-[90vh] m-5 outline outline-2"
       @contextmenu="highlight"
-      @click="tryMove"
     >
-      <Board class="shadow-xl" />
+      <Board
+        class="shadow-xl"
+        @click="tryMove"
+        :class="{ 'cursor-grabbing': isDragged }"
+      />
       <LastMove />
       <Highlights />
       <SelectedSquare />
