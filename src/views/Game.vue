@@ -57,8 +57,8 @@ function tryMove(e: MouseEvent) {
     >
       <Board
         class="shadow-xl"
-        @click="tryMove"
         :class="{ 'cursor-grabbing': isDragged }"
+        @click="tryMove"
       />
       <LastMove />
       <Highlights />

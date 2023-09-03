@@ -5,6 +5,12 @@ import { useBoardStore } from "@/stores/board";
 const store = useBoardStore();
 
 const { possibleMoves, isDragged } = storeToRefs(store);
+
+function tryMove(e: MouseEvent, x: number, y: number) {
+  e.preventDefault();
+  if (x == null || y == null) return;
+  store.changeSelectedSquare(x, y);
+}
 </script>
 <template>
   <div
@@ -15,6 +21,9 @@ const { possibleMoves, isDragged } = storeToRefs(store);
       'translate-y-[' + (possibleMove.coordinates.y - 1) * 100 + '%]',
       { 'pointer-events-none': isDragged },
     ]"
+    @click="
+      tryMove($event, possibleMove.coordinates.x, possibleMove.coordinates.y)
+    "
   >
     <div
       class="w-1/3 h-1/3 bg-opacity-50 bg-[color:black] transform rounded-full"
