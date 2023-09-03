@@ -13,6 +13,7 @@ const { lastMove } = storeToRefs(store);
     :class="[
       'translate-x-[' + (move.x - 1) * 100 + '%]',
       'translate-y-[' + (move.y - 1) * 100 + '%]',
+      'pointer-events-none',
     ]"
   ></div>
 </template>

@@ -22,7 +22,7 @@ const pieceClass = computed(() => {
 </script>
 <template>
   <div
-    class="absolute top-0 left-0 w-[12.5%] h-[12.5%] z-20"
+    class="absolute top-0 left-0 w-[12.5%] h-[12.5%]"
     :class="[
       'translate-x-[' + (piece.coordinates.x - 1) * 100 + '%]',
       'translate-y-[' + (piece.coordinates.y - 1) * 100 + '%]',

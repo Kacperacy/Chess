@@ -66,9 +66,9 @@ function tryMove(e: MouseEvent) {
       <Pieces :board="board" />
       <PossibleMoves />
       <PawnPromotion v-if="store.isPromotion()" />
+      <GameResult v-if="store.gameResult != 'OnGoing'" />
     </div>
     <GameControls class="ml-1 rounded-lg w-1/12 h-2/3 m-5 shadow-xl" />
-    <GameResult v-if="store.gameResult != 'OnGoing'" />
   </div>
   <a
     href="https://github.com/Kacperacy/Chess"
