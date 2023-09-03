@@ -70,9 +70,17 @@ function tryMove(e: MouseEvent) {
     </div>
     <GameControls class="ml-1 rounded-lg w-1/12 h-2/3 m-5 shadow-xl" />
   </div>
-  <a
-    href="https://github.com/Kacperacy/Chess"
-    class="text-3xl mb-5 mt-2 transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 hover:text-[color:#333]"
-    ><font-awesome-icon :icon="['fab', 'github']" />REPO</a
-  >
+  <footer class="justify-around items-center flex w-1/3">
+    <a
+      href="https://github.com/Kacperacy/Chess"
+      class="text-3xl mb-5 mt-2 transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 hover:text-[color:#333]"
+      ><font-awesome-icon :icon="['fab', 'github']" class="mr-2" />REPO</a
+    >
+    <a
+      href="https://github.com/Kacperacy/Chess/issues/new?assignees=&labels=&projects=&template=bug_report.md&title="
+      class="text-2xl mb-5 mt-2 transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 hover:text-[color:#333]"
+      ><font-awesome-icon :icon="['fas', 'bug']" class="text-3xl mr-2" />Report
+      bug</a
+    >
+  </footer>
 </template>

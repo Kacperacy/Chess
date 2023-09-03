@@ -5,6 +5,7 @@ import {
   faRepeat,
   faArrowRotateLeft,
   faArrowLeft,
+  faBug,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -16,6 +17,7 @@ library.add(faRepeat);
 library.add(faArrowRotateLeft);
 library.add(faArrowLeft);
 library.add(faGithub);
+library.add(faBug);
 
 createApp(App)
   .component("font-awesome-icon", FontAwesomeIcon)
