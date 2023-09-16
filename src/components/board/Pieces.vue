@@ -56,7 +56,7 @@ function move(e: MouseEvent) {
   if (props.board == null) return;
   if (draggedElement.value == null) return;
 
-  var board = props.board.getBoundingClientRect();
+  let board = props.board.getBoundingClientRect();
 
   if (
     e.clientX > board.left &&
@@ -64,9 +64,10 @@ function move(e: MouseEvent) {
     e.clientY > board.top &&
     e.clientY < board.bottom
   ) {
+    let pieceSize = draggedElement.value.getBoundingClientRect().width / 2;
     draggedElement.value.style.transform = `translate(${
-      e.clientX - board.left - 75 + window.scrollX + "px" // 50 is half of the piece size (100px)
-    }, ${e.clientY - board.top - 75 + window.scrollY + "px"})`;
+      e.clientX - board.left - pieceSize + window.scrollX + "px"
+    }, ${e.clientY - board.top - pieceSize + window.scrollY + "px"})`;
   }
 }
 
